@@ -25,3 +25,18 @@ jobs:
         with:
           name: mathematical_theory_entrepreneurship
           path: mathematical_theory_entrepreneurship.pdf
+
+      - name: Update latest release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Delete existing 'latest' release if it exists
+          gh release delete latest --yes || true
+          # Delete the tag so it can be recreated at the new commit
+          git push origin :refs/tags/latest || true
+          # Create a new 'latest' release at this commit
+          gh release create latest \
+            mathematical_theory_entrepreneurship.pdf \
+            --title "Latest Build" \
+            --notes "Automatically compiled from the latest commit on main ($(git rev-parse --short HEAD))."
