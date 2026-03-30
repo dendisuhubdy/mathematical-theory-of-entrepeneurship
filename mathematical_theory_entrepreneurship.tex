@@ -1,0 +1,2176 @@
+\documentclass[12pt,a4paper,oneside]{book}
+
+% ============================================================
+% PACKAGES
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{epigraph}
+\usepackage{tcolorbox}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{multicol}
+
+\geometry{margin=1in,headheight=15pt}
+\onehalfspacing
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=green!40!black,
+  urlcolor=blue!70!black
+}
+
+% ============================================================
+% THEOREM ENVIRONMENTS
+% ============================================================
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{axiom}[theorem]{Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+% ============================================================
+% TCOLORBOX for key insights
+% ============================================================
+\newtcolorbox{keyinsight}[1][]{
+  colback=blue!3,
+  colframe=blue!40!black,
+  title={\textbf{Key Insight}},
+  fonttitle=\bfseries,
+  #1
+}
+
+\newtcolorbox{practicalimplication}[1][]{
+  colback=green!3,
+  colframe=green!40!black,
+  title={\textbf{Practical Implication}},
+  fonttitle=\bfseries,
+  #1
+}
+
+% ============================================================
+% CUSTOM COMMANDS
+% ============================================================
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\KL}{\mathrm{D}_{\mathrm{KL}}}
+\newcommand{\MI}{\mathrm{I}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\argmax}{\operatorname{arg\,max}}
+\newcommand{\argmin}{\operatorname{arg\,min}}
+
+% ============================================================
+% HEADER / FOOTER
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+% ============================================================
+% TITLE
+% ============================================================
+\title{%
+  \vspace{-1cm}
+  {\Huge\textbf{A Mathematical Theory\\[6pt] of Entrepreneurship}}\\[18pt]
+  {\Large Options Theory, Game Theory, Information Theory,\\[4pt]
+  Product Development, and Regulatory Barriers\\[4pt]
+  in Venture Formation and Capital Allocation}\\[24pt]
+  {\large Working Manuscript}
+}
+\author{
+  \textsc{Systematic Trading Group (STG)}
+}
+\date{\today}
+
+% ============================================================
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+% ============================================================
+% PREFACE
+% ============================================================
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+After building five ventures and selling four of them, a pattern emerged that was too
+consistent to be coincidental: running a firm felt remarkably like constructing a call
+option and rolling it every month. The monthly decision to continue operating---paying
+rent, making payroll, deploying capital into experiments---was structurally identical
+to paying the premium on an option position. The exit event---acquisition, IPO, or
+shutdown---was the exercise or expiry.
+
+This was not merely metaphor. The Merton model of 1974 literally treats a firm's equity
+as a European call option on its assets, with the strike price equal to the face value
+of debt. What had been missing was the extension of this insight into a complete
+decision framework for the \emph{entrepreneur}---the agent who constructs the option,
+controls its parameters, and must decide when and how to exercise.
+
+This book develops that framework. It draws on four bodies of mathematical theory:
+options pricing, game theory, information theory, and regulatory economics. Each pillar
+contributes essential structure. Options theory provides the valuation framework and the
+``Greeks'' that measure sensitivity to business parameters. Game theory models the
+strategic interactions---among co-founders, between entrepreneur and investor, and
+between competitors in post-crash environments. Information theory quantifies the
+entrepreneur's learning process and competitive advantage. Regulatory theory addresses
+the information barriers and entropy taxes that governments impose on venture activity.
+
+A fifth pillar---product development and product-market fit---bridges the gap between
+mathematical abstraction and the messy reality of building something people want. Product
+development is, at its core, an art. But it is an art informed by rigorous survey
+methodology, quantitative market sizing, and the deep human intuition that certain
+latent needs exist even when no customer can articulate them. The iPhone did not emerge
+from a focus group. Tesla did not wait for consumers to demand electric vehicles.
+Nintendo did not survey households about interactive entertainment before households
+knew what interactive entertainment was. Yet in each case, the entrepreneur's insight
+was grounded in an information-theoretic reality: the mutual information between the
+product concept and the latent human need was extraordinarily high, even if the direct
+channel between ``what people say they want'' and ``what they will actually adopt'' was
+noisy.
+
+The mathematical language throughout is precise but motivated by practical application.
+Every theorem is paired with an entrepreneurial interpretation. Every equation maps to
+a decision the founder must make. The goal is not mathematical elegance for its own sake,
+but a decision calculus that the serial entrepreneur can carry into the next venture, the
+next fundraise, the next regulatory negotiation.
+
+\vspace{1cm}
+\hfill\textit{Singapore, \the\year}
+
+% ============================================================
+% TABLE OF CONTENTS
+% ============================================================
+\tableofcontents
+
+% ============================================================
+% CHAPTER 1 --- INTRODUCTION
+% ============================================================
+\chapter{Introduction}\label{ch:intro}
+
+\epigraph{``In theory, there is no difference between theory and practice.
+In practice, there is.''}{\textit{Attributed to Yogi Berra}}
+
+\section{Motivation}
+
+The practice of entrepreneurship is rich with heuristic wisdom. ``Raise when you can,
+not when you need to.'' ``Your runway is your lifeline.'' ``Find product-market fit
+before you scale.'' ``Hire slow, fire fast.'' These aphorisms encode genuine strategic
+insight, distilled from thousands of ventures across decades. Yet they lack a unified
+mathematical foundation that explains \emph{why} they work, \emph{when} they fail, and
+\emph{how} they interact.
+
+Consider the following scenario, familiar to any serial entrepreneur. You have built a
+venture to \$5M in annual recurring revenue. The economy is showing late-cycle signs:
+the yield curve has been inverted for six months, credit spreads are widening, and the
+VIX term structure is shifting toward backwardation. You have 14 months of runway. A
+top-tier venture firm has offered a term sheet at a 15\texttimes{} revenue multiple. A
+venture debt provider is offering \$3M at 8\% with warrants covering 0.5\% of equity.
+Meanwhile, the SEC has just issued a Wells notice to a competitor operating in your
+regulatory space, and the EU is finalising MiCA implementation that will require
+significant compliance infrastructure.
+
+What should you do?
+
+This is not a hypothetical question with a simple answer. It is a multi-dimensional
+optimisation problem involving market timing (options theory), strategic interaction with
+investors and regulators (game theory), signal extraction from noisy macro and regulatory
+indicators (information theory), and product positioning in a shifting competitive
+landscape (product-market fit theory). The heuristics help, but they are insufficient.
+You need a framework.
+
+\section{Central Thesis}
+
+Our central thesis can be stated precisely:
+
+\begin{keyinsight}
+An entrepreneur is a serial constructor of compound call options on venture value,
+where the strike price is total committed capital, the underlying asset follows a
+controlled stochastic diffusion whose drift and volatility are functions of
+game-theoretic equilibrium selection and information acquisition rate, the product
+development process determines the initial conditions and attainable state space of the
+diffusion, and the regulatory environment imposes an entropy tax that serves
+simultaneously as a cost, a signal, and a barrier to entry.
+\end{keyinsight}
+
+\section{Theoretical Antecedents}
+
+This framework builds on several established bodies of theory, each of which has been
+applied to aspects of entrepreneurship but never unified into a single decision calculus.
+
+\paragraph{Structural corporate finance.} \citet{Merton1974} showed that equity can be
+valued as a call option on firm assets. \citet{BlackCox1976} extended this to first-passage
+models of default. \citet{Geske1979} developed compound option pricing, which maps
+naturally to multi-round venture financing. \citet{MyersMajluf1984} established the
+pecking order theory of capital structure under asymmetric information.
+
+\paragraph{Real options.} \citet{DixitPindyck1994} developed the theory of investment
+under uncertainty using option-pricing methods. \citet{Trigeorgis1996} extended this to
+managerial flexibility and strategic resource allocation. \citet{McGrath1999} applied real
+options reasoning specifically to entrepreneurial failure and learning.
+
+\paragraph{Game theory and mechanism design.} \citet{Spence1973} introduced signalling
+games, directly applicable to fundraising. \citet{Holmstrom1982} characterised moral
+hazard in teams. \citet{LelandPyle1977} showed that entrepreneur retention signals firm
+quality. \citet{MaynardSmith1974} developed the war of attrition model, applicable to
+post-crash competitive dynamics.
+
+\paragraph{Information theory.} \citet{Shannon1948} founded the mathematical theory of
+communication. \citet{Kelly1956} derived optimal bet sizing under uncertainty.
+\citet{CoverThomas2006} provide the modern treatment of entropy, mutual information, and
+rate-distortion theory. \citet{Gittins1979} solved the multi-armed bandit problem, which
+maps to the entrepreneur's explore-exploit tradeoff.
+
+\paragraph{Regulatory economics.} \citet{Stigler1971} proposed the economic theory of
+regulation. \citet{Peltzman1976} extended it to regulatory capture. \citet{Tiebout1956}
+developed the model of jurisdictional competition. \citet{BakerBloomDavis2016} quantified
+the impact of economic policy uncertainty on investment.
+
+\section{Structure of the Book}
+
+The book is organised as follows:
+
+Chapter~\ref{ch:product} develops the product development and product-market fit pillar,
+arguing that while product creation is fundamentally an art, it can be informed by
+rigorous quantitative methodology drawn from survey design, market sizing, and
+information-theoretic signal extraction.
+
+Chapter~\ref{ch:options} develops the options-theoretic pillar, treating venture equity as
+a compound call option on stochastic firm value with controlled drift and volatility.
+
+Chapter~\ref{ch:game} introduces the game-theoretic models of team dynamics, investor
+signalling, and post-crash competitive dynamics.
+
+Chapter~\ref{ch:info} builds the information-theoretic foundation, formalising the
+entrepreneur's learning rate, signal extraction, and optimal capital deployment.
+
+Chapter~\ref{ch:fundraising} synthesises the first four pillars into a fundraising timing
+and instrument selection model.
+
+Chapter~\ref{ch:regulation} extends the framework to regulatory barriers, information
+asymmetry, and jurisdictional competition.
+
+Chapter~\ref{ch:synthesis} presents the unified optimisation problem and derives the
+master Hamilton--Jacobi--Bellman equation.
+
+Chapter~\ref{ch:conclusion} concludes with implications for practice and directions for
+future research.
+
+% ============================================================
+% CHAPTER 2 --- PRODUCT DEVELOPMENT
+% ============================================================
+\chapter{Product Development and Product-Market Fit}\label{ch:product}
+
+\epigraph{``If I had asked people what they wanted, they would have said faster
+horses.''}{\textit{Attributed to Henry Ford}}
+
+\section{The Art and Science of Product Creation}\label{sec:art_science}
+
+Product development sits at the intersection of art and science. It is an art because the
+most transformative products in history---the printing press, the telephone, the
+automobile, the personal computer, the smartphone---were not the outputs of systematic
+market research. They were acts of creative vision that anticipated human needs before
+those needs were consciously articulated by the market. No focus group in 2005 would have
+described the iPhone. No survey of horse-and-buggy owners in 1900 would have specified
+the Model~T.
+
+Yet product development is also a science---or at least, it can be disciplined by
+scientific methodology. Survey design, quantitative market sizing, conjoint analysis,
+A/B testing, and Bayesian experimentation all provide rigorous tools for reducing
+uncertainty about what the market wants, how large it is, and what customers will pay.
+The art lies in the vision; the science lies in the validation.
+
+The mathematical framework we develop in this chapter treats product development as
+a structured information acquisition process. The entrepreneur begins with a
+\textbf{prior belief} about a latent human need, acquires information through research
+and experimentation, and iteratively refines the product concept until it achieves
+\textbf{product-market fit}---the state in which the product satisfies the need
+efficiently enough that the market pulls it forward without requiring constant push.
+
+\subsection{What Product-Market Fit Is, Mathematically}
+
+We can formalise product-market fit as a condition on the mutual information between the
+product offering and the customer need:
+
+\begin{definition}[Product-market fit]\label{def:pmf}
+Let $P$ denote the random variable representing the product's attribute vector
+(features, price, positioning, distribution) and $N$ denote the random variable
+representing the customer's latent need vector. \textbf{Product-market fit} is
+achieved when the mutual information exceeds a critical threshold:
+\begin{equation}\label{eq:pmf}
+  \MI(P; N) \geq I^*_{\text{PMF}},
+\end{equation}
+where $I^*_{\text{PMF}}$ is the minimum mutual information required for the product to
+be self-sustaining (organic growth exceeds churn without unsustainable acquisition spend).
+\end{definition}
+
+Before product-market fit, $\MI(P; N) < I^*_{\text{PMF}}$: the product does not
+sufficiently address the customer need, and growth requires constant capital injection
+(marketing spend, sales effort, subsidies). After product-market fit, the mutual
+information is high enough that the product ``resonates''---customers adopt, retain, and
+refer organically.
+
+\begin{remark}
+The threshold $I^*_{\text{PMF}}$ is not universal; it depends on the market structure,
+competitive intensity, and the cost structure of the business. In a winner-take-all
+market with strong network effects (social media, marketplace platforms), $I^*_{\text{PMF}}$
+is very high because partial fit means losing to the dominant player. In fragmented
+markets with heterogeneous needs (enterprise software, local services), $I^*_{\text{PMF}}$
+can be lower because niche fit is sufficient.
+\end{remark}
+
+\section{Quantitative Market Research: Scoping the Opportunity}\label{sec:market_research}
+
+Before the entrepreneur can reduce uncertainty about the product, they must first
+quantify the \emph{market}---the set of potential customers, their willingness to pay,
+and the competitive landscape. This is the domain of quantitative market sizing.
+
+\subsection{The TAM-SAM-SOM Framework as Bayesian Estimation}
+
+The standard Total Addressable Market (TAM), Serviceable Addressable Market (SAM), and
+Serviceable Obtainable Market (SOM) framework can be formalised as a Bayesian estimation
+problem.
+
+\begin{definition}[Market size hierarchy]
+\begin{align}
+  \text{TAM} &= \sum_{i=1}^{N_{\text{total}}} \E[\text{WTP}_i]
+    = N_{\text{total}} \cdot \bar{w}, \label{eq:tam} \\
+  \text{SAM} &= \sum_{i \in \mathcal{S}} \E[\text{WTP}_i]
+    = |\mathcal{S}| \cdot \bar{w}_{\mathcal{S}}, \label{eq:sam} \\
+  \text{SOM} &= \text{SAM} \cdot \Prob(\text{capture} \mid
+    \text{product}, \text{competition}, \text{go-to-market}), \label{eq:som}
+\end{align}
+where $N_{\text{total}}$ is the total number of potential customers globally,
+$\bar{w}$ is the average willingness to pay, $\mathcal{S} \subseteq \{1, \ldots,
+N_{\text{total}}\}$ is the serviceable subset (those the entrepreneur can actually reach
+with current capabilities), and $\bar{w}_{\mathcal{S}}$ is the average WTP within the
+serviceable set.
+\end{definition}
+
+The critical uncertainty is in the SOM---the conversion from addressable to obtainable.
+This conversion probability depends on product-market fit (does the product solve the
+need?), competitive dynamics (how many other firms serve this segment?), and
+go-to-market efficiency (can the entrepreneur reach and convert these customers at
+acceptable cost?).
+
+\subsection{Survey Methodology and Conjoint Analysis}
+
+The entrepreneur reduces uncertainty about market size and willingness to pay through
+structured research. The two primary tools are:
+
+\paragraph{Direct surveys.} Structured questionnaires administered to a representative
+sample of the target market. The key statistical considerations are:
+
+\begin{equation}\label{eq:sample_size}
+  n \geq \frac{z^2_{\alpha/2}\,\hat{p}(1-\hat{p})}{e^2},
+\end{equation}
+where $n$ is the required sample size, $z_{\alpha/2}$ is the critical value for
+confidence level $1-\alpha$, $\hat{p}$ is the estimated proportion with the
+characteristic of interest, and $e$ is the margin of error. For early-stage ventures,
+even $n = 30$--$100$ well-designed interviews can dramatically reduce entropy about
+customer needs.
+
+\paragraph{Conjoint analysis.} A multivariate statistical technique that estimates the
+relative importance of product attributes by presenting customers with hypothetical
+product configurations and measuring preference orderings. The utility model is:
+
+\begin{equation}\label{eq:conjoint}
+  U_i(\mathbf{x}) = \sum_{j=1}^J \sum_{k=1}^{K_j} \beta_{jk}\,x_{jk}
+    + \varepsilon_i,
+\end{equation}
+where $U_i$ is the utility of product configuration $\mathbf{x}$ for customer~$i$,
+$\beta_{jk}$ is the part-worth utility of level~$k$ of attribute~$j$, $x_{jk}$ is an
+indicator for whether level~$k$ of attribute~$j$ is present, and $\varepsilon_i$ is an
+error term.
+
+The \emph{relative importance} of attribute~$j$ is:
+\begin{equation}\label{eq:importance}
+  \text{Importance}_j = \frac{\max_k \beta_{jk} - \min_k \beta_{jk}}
+    {\sum_{j'=1}^J (\max_k \beta_{j'k} - \min_k \beta_{j'k})} \times 100\%.
+\end{equation}
+
+\begin{practicalimplication}
+Conjoint analysis tells the entrepreneur which product features drive the most
+preference. This directly informs the product roadmap: features with high importance
+scores should be prioritised; features with low importance scores are candidates for
+elimination (reducing complexity and cost).
+\end{practicalimplication}
+
+\subsection{The Information-Theoretic Value of Market Research}
+
+Each piece of market research---every survey response, every customer interview, every
+competitive analysis---is an information-theoretic experiment that reduces the entropy
+of the entrepreneur's belief about the market:
+
+\begin{equation}\label{eq:research_value}
+  \Delta H = H(N) - H(N \mid Y_{\text{research}})
+  = \MI(N; Y_{\text{research}}),
+\end{equation}
+where $N$ is the latent need variable and $Y_{\text{research}}$ is the observation from
+research.
+
+The \emph{expected value of information} (following \citet{Howard1966}) is:
+\begin{equation}\label{eq:evoi}
+  \text{EVOI} = \E_{Y}\!\left[\max_a \E[V \mid Y, a]\right]
+    - \max_a \E[V \mid a],
+\end{equation}
+where $a$ is the product design decision and $V$ is the venture value. The EVOI
+quantifies how much the optimal decision improves when the entrepreneur has access to
+the research signal~$Y$.
+
+\begin{proposition}[Diminishing returns to research]\label{prop:diminishing_research}
+Under standard regularity conditions (bounded entropy, finite action space), the
+marginal EVOI of additional research is non-increasing:
+\begin{equation}\label{eq:diminishing}
+  \frac{\partial^2 \text{EVOI}}{\partial n_{\text{research}}^2} \leq 0,
+\end{equation}
+where $n_{\text{research}}$ is the number of research observations. This justifies the
+entrepreneurial heuristic of ``talk to 30 customers, not 3,000''---the first few
+dozen conversations contain the vast majority of the information.
+\end{proposition}
+
+\section{Creating Products for Unarticulated Needs}\label{sec:unarticulated}
+
+The most transformative ventures do not respond to existing, articulated demand. They
+create products for needs that customers cannot yet express---what we call
+\textbf{latent demand}. This is where product development becomes genuinely artistic,
+and where the entrepreneur's creative vision matters most.
+
+\subsection{The Latent Demand Framework}
+
+\begin{definition}[Latent demand]\label{def:latent_demand}
+A \textbf{latent demand} exists when:
+\begin{enumerate}[nosep]
+  \item There exists a fundamental human need $N^*$ (communication, mobility, play,
+    energy, status);
+  \item Current solutions satisfy $N^*$ with efficiency $\eta_{\text{current}} < 1$;
+  \item A technological or design breakthrough enables a product with efficiency
+    $\eta_{\text{new}} \gg \eta_{\text{current}}$;
+  \item Customers cannot articulate their desire for the new product because they
+    have no reference frame for the improvement.
+\end{enumerate}
+\end{definition}
+
+Mathematically, latent demand is a condition on the mutual information structure:
+\begin{equation}\label{eq:latent_mi}
+  \MI(P_{\text{new}}; N^*) \gg \MI(P_{\text{current}}; N^*)
+  \quad \text{but} \quad
+  \MI(P_{\text{new}}; Y_{\text{survey}}) \approx 0,
+\end{equation}
+where $Y_{\text{survey}}$ is the output of traditional market research (surveys, focus
+groups, stated preferences). The new product has extremely high alignment with the
+fundamental need, but traditional research methods cannot detect this alignment because
+customers lack the vocabulary and reference frame to express it.
+
+This is the fundamental information-theoretic challenge of breakthrough product
+development: \textbf{the channel between the latent need and the survey response is
+extremely noisy for novel products.} The signal-to-noise ratio of traditional market
+research drops to near zero when the product concept is sufficiently novel.
+
+\subsection{Case Study: Apple iPhone (2007)}
+
+The iPhone is the canonical example of a product designed for latent demand. Consider
+the information structure:
+
+\paragraph{The fundamental need $N^*$.} Humans have a deep, evolved need to communicate,
+access information, and maintain social connections. This need is as old as language
+itself and is well-established in the anthropological literature.
+
+\paragraph{Pre-iPhone solutions.} By 2006, this need was served by a fragmented
+collection of devices: mobile phones (voice and SMS), PDAs (calendars, contacts),
+BlackBerry devices (email), iPods (music), laptops (web browsing), and digital cameras
+(photography). Each device served one facet of the need with moderate efficiency. The
+total ``communication stack'' was:
+\begin{equation}
+  \eta_{\text{current}} = \frac{\text{need satisfaction achieved}}
+    {\text{cognitive and physical cost of multi-device management}},
+\end{equation}
+which was low because of the overhead of carrying, charging, syncing, and switching
+between multiple devices.
+
+\paragraph{The iPhone insight.} Steve Jobs's creative insight was that a single,
+software-defined device with a multi-touch interface could collapse the entire
+communication stack into one object. The efficiency improvement was:
+\begin{equation}
+  \frac{\eta_{\text{iPhone}}}{\eta_{\text{current}}}
+  = \frac{\MI(P_{\text{iPhone}}; N^*)}{\MI(P_{\text{multi-device}}; N^*)} \gg 1.
+\end{equation}
+
+\paragraph{Why surveys failed.} No market research could have identified the iPhone
+because the concept of a ``pocket computer with a touch screen that replaces your phone,
+iPod, camera, and PDA'' was outside the customer's conceptual space. The channel capacity
+between the latent need and stated preference was near zero:
+\begin{equation}
+  C_{\text{survey}} = \log_2(1 + \text{SNR}_{\text{novel}}) \approx 0
+  \quad \text{for sufficiently novel products}.
+\end{equation}
+
+The entrepreneur's alpha in this case was entirely in the creative vision---the ability
+to perceive the latent need structure directly, bypassing the noisy survey channel.
+
+\subsection{Case Study: Tesla and Electric Vehicles}
+
+Tesla illustrates a different variant of the latent demand problem: the need was
+partially articulated (``I want a car that doesn't pollute''), but the
+\emph{implementation path} was unarticulated.
+
+\paragraph{The fundamental need $N^*$.} Personal mobility with status signalling
+(automobiles have always been status goods as much as transportation goods) and,
+increasingly, environmental conscience.
+
+\paragraph{Pre-Tesla framing.} By 2008, the electric vehicle concept existed but was
+associated with the GM EV1 (cancelled), the Toyota Prius (hybrid, not fully electric),
+and a handful of low-performance NEVs. The market's mental model was:
+\begin{equation}
+  \E_{\text{market}}[\text{EV quality}] = \text{low performance}
+    + \text{short range} + \text{ugly design}.
+\end{equation}
+
+\paragraph{Tesla's information-theoretic insight.} Elon Musk recognised that the
+constraint was not battery technology per se, but the \emph{product architecture
+decision} to start at the luxury end:
+\begin{equation}
+  \MI(P_{\text{luxury EV}}; N^*_{\text{status + mobility + environment}})
+  \gg \MI(P_{\text{economy EV}}; N^*_{\text{status + mobility + environment}}).
+\end{equation}
+
+By targeting the luxury segment first (Roadster, then Model~S), Tesla exploited the fact
+that early adopters in the luxury segment have a higher willingness to pay and a higher
+tolerance for inconvenience (limited charging infrastructure), while simultaneously
+providing the status signalling that made the environmental sacrifice feel like a
+\emph{gain} rather than a sacrifice.
+
+\paragraph{The Bayesian update.} Tesla's product strategy can be modelled as a sequential
+Bayesian update of the market's belief about EV quality:
+\begin{equation}\label{eq:tesla_bayes}
+  \Prob(\text{EV} = \text{viable} \mid \text{Roadster success})
+  = \frac{\ell(\text{success} \mid \text{viable})\,\pi_0}
+    {\ell(\text{success} \mid \text{viable})\,\pi_0
+    + \ell(\text{success} \mid \text{not viable})\,(1 - \pi_0)}.
+\end{equation}
+Each successful product launch (Roadster $\to$ Model~S $\to$ Model~3) shifted the
+market's posterior toward ``viable,'' creating a compound option structure where each
+product generation was an option on the next.
+
+\subsection{Case Study: Nintendo and Video Gaming}
+
+Nintendo's entry into home video gaming in 1983 (Famicom/NES) represents the creation
+of an entirely new product category---interactive electronic entertainment---for which
+no prior reference frame existed in the consumer's mind.
+
+\paragraph{The fundamental need $N^*$.} Play, competition, and escapism. These are
+ancient human needs served historically by board games, card games, sports, and
+storytelling. The key insight was that electronic technology could serve these needs
+with vastly higher engagement intensity.
+
+\paragraph{The information problem.} In 1983, after the North American video game crash
+(the ``Atari shock''), the market's prior on home video gaming was extremely negative:
+\begin{equation}
+  \pi_0(\text{gaming viable}) \approx 0.1 \quad \text{(post-crash)}.
+\end{equation}
+
+Nintendo's product strategy was a sophisticated signalling game: the NES was marketed
+not as a ``video game console'' (toxic framing) but as an ``Entertainment System''
+bundled with R.O.B. (Robotic Operating Buddy), which made it look like a toy rather
+than a gaming device. This reframing altered the signal that retailers and consumers
+received:
+\begin{equation}
+  \MI(P_{\text{NES}}; N^*_{\text{play}}) \gg 0
+  \quad \text{but} \quad
+  \MI(P_{\text{NES}}; Y_{\text{crash memory}}) \approx 0.
+\end{equation}
+
+The product bypassed the negative association with the crashed gaming market by
+sending a different signal through a different channel, demonstrating that product
+positioning is itself an information-theoretic operation---choosing which channel to
+transmit through to maximise the signal-to-noise ratio of the product's value
+proposition.
+
+\subsection{Case Study: Oil Refining---The Traditional Product}
+
+Not all transformative products are technology breakthroughs. Sometimes the product
+insight is about \emph{where value accrues in a value chain}. The oil industry provides
+a classic example.
+
+\paragraph{The fundamental need $N^*$.} Energy for transportation, heating, and
+industrial production.
+
+\paragraph{The value chain insight.} Crude oil extraction is a commodity activity with
+high competition and relatively low margins (especially in the modern era of OPEC
+coordination and sovereign producers). The true value creation occurs at the
+\textbf{refinery stage}---the transformation of crude oil into usable products
+(gasoline, diesel, jet fuel, petrochemicals).
+
+Formally, let the value chain be decomposed into stages $s_1$ (exploration),
+$s_2$ (extraction), $s_3$ (refining), and $s_4$ (distribution). The value added at
+each stage is:
+\begin{equation}\label{eq:value_chain}
+  V_{\text{total}} = \sum_{k=1}^4 \Delta V_k,
+  \qquad
+  \Delta V_k = P_k^{\text{out}} - P_k^{\text{in}} - C_k,
+\end{equation}
+where $P_k^{\text{out}}$ is the output price, $P_k^{\text{in}}$ is the input price,
+and $C_k$ is the operating cost at stage~$k$.
+
+The information-theoretic insight is that the \textbf{refining stage has the highest
+barriers to entry} because:
+\begin{equation}
+  I_{\min}^{\text{refining}} \gg I_{\min}^{\text{extraction}}
+  \gg I_{\min}^{\text{distribution}},
+\end{equation}
+where $I_{\min}$ is the minimum mutual information (technical knowledge, regulatory
+compliance, capital requirements) needed to operate at each stage. Refineries require
+enormous capital expenditure (\$5--15B for a world-scale facility), deep chemical
+engineering expertise, and complex environmental permitting. This creates the
+information-theoretic moat described in Chapter~\ref{ch:regulation}.
+
+\begin{practicalimplication}
+The entrepreneur should identify the stage in the value chain where $\Delta V_k / I_{\min}^k$
+is maximised---the stage with the highest value-add per unit of required information
+investment. In many industries, this is not the ``glamorous'' stage (extraction, design)
+but the ``boring'' stage (refining, processing, logistics infrastructure).
+\end{practicalimplication}
+
+\section{The Product Development Process as Entropy Reduction}\label{sec:product_entropy}
+
+We now formalise the entire product development process as a structured entropy
+reduction procedure.
+
+\subsection{The Product State Space}
+
+\begin{definition}[Product state]
+The product at time~$t$ is characterised by a state vector:
+\begin{equation}\label{eq:product_state}
+  \mathbf{p}_t = \bigl(f_t^1, \ldots, f_t^d,\; q_t,\; c_t,\; m_t\bigr),
+\end{equation}
+where $f_t^j$ is the specification of feature~$j$, $q_t$ is a quality index, $c_t$ is
+the unit cost, and $m_t$ is the market position (pricing, distribution, branding).
+\end{definition}
+
+\begin{definition}[Product-market entropy]
+The \textbf{product-market entropy} is:
+\begin{equation}\label{eq:pm_entropy}
+  H_{\text{PM}}(t) = H(\mathbf{p}^*) - \MI(\mathbf{p}^*;\, Y_1, \ldots, Y_{n(t)}),
+\end{equation}
+where $\mathbf{p}^*$ is the optimal product configuration (the configuration that
+maximises $\MI(P; N)$) and $Y_1, \ldots, Y_{n(t)}$ are all observations gathered
+through time~$t$.
+\end{definition}
+
+Product-market fit is achieved when $H_{\text{PM}}(t) < H^*$, i.e., the remaining
+uncertainty about the optimal product is small enough that the current product
+configuration is within the basin of attraction of the true optimum.
+
+\subsection{The Lean Startup as Information-Optimal Experimentation}
+
+The Lean Startup methodology (build-measure-learn) is, in our framework, an
+approximately optimal strategy for reducing $H_{\text{PM}}$ subject to capital
+constraints. Each iteration of the build-measure-learn loop is an experiment
+$Y_k$ that provides mutual information $\MI(\mathbf{p}^*; Y_k)$ at cost $c_k$.
+
+The entrepreneur's experimentation problem is:
+\begin{equation}\label{eq:experiment_opt}
+  \max_{\{Y_k\}_{k=1}^K} \sum_{k=1}^K \MI(\mathbf{p}^*; Y_k \mid Y_1, \ldots, Y_{k-1})
+  \quad \text{subject to} \quad
+  \sum_{k=1}^K c_k \leq B,
+\end{equation}
+where $B$ is the experimentation budget (a subset of total capital).
+
+\begin{proposition}[Optimal experiment design]\label{prop:optimal_experiment}
+Under Gaussian assumptions on the state and observation processes, the
+information-optimal experiment at step~$k$ is:
+\begin{equation}\label{eq:optimal_experiment}
+  Y_k^* = \argmax_{Y \in \mathcal{Y}}
+    \frac{\MI(\mathbf{p}^*; Y \mid Y_1, \ldots, Y_{k-1})}{c(Y)},
+\end{equation}
+i.e., the experiment with the highest information-to-cost ratio.
+\end{proposition}
+
+This provides a principled framework for the ``minimum viable product'' (MVP)
+concept: the MVP is the cheapest experiment that provides the maximum
+information about product-market fit.
+
+\subsection{The Pivot as Bayesian Model Selection}
+
+A \textbf{pivot} occurs when the entrepreneur's accumulated evidence causes a
+discontinuous shift in the product strategy. In Bayesian terms, a pivot is a model
+selection event:
+
+\begin{definition}[Pivot condition]
+Let $\mathcal{M}_1, \ldots, \mathcal{M}_L$ be competing product models
+(hypotheses about what the market wants). The entrepreneur pivots from model
+$\mathcal{M}_i$ to model $\mathcal{M}_j$ when the posterior odds flip:
+\begin{equation}\label{eq:pivot}
+  \frac{\Prob(\mathcal{M}_j \mid Y_1, \ldots, Y_n)}
+    {\Prob(\mathcal{M}_i \mid Y_1, \ldots, Y_n)}
+  = \frac{\Prob(\mathcal{M}_j)}{\Prob(\mathcal{M}_i)}
+    \cdot \prod_{k=1}^n \frac{p(Y_k \mid \mathcal{M}_j)}
+      {p(Y_k \mid \mathcal{M}_i)}
+  > 1.
+\end{equation}
+\end{definition}
+
+The accumulated Bayes factor $\prod_{k=1}^n p(Y_k \mid \mathcal{M}_j) / p(Y_k \mid
+\mathcal{M}_i)$ is the quantitative evidence for the pivot. The entrepreneur should
+resist pivoting on weak evidence (the Bayes factor is close to~1) but should pivot
+decisively when the evidence is strong (the Bayes factor exceeds a threshold, typically
+10--100).
+
+\subsection{Connection to Options Theory}
+
+Product development determines the \emph{initial conditions} of the firm value
+diffusion in equation~\eqref{eq:gbm_ch3}. Specifically:
+
+\begin{itemize}[nosep]
+  \item The quality of product-market fit determines the \textbf{drift} $\mu$:
+    a product with high $\MI(P; N)$ generates organic growth, which increases $\mu$.
+  \item The breadth of the product's applicability determines the \textbf{volatility}
+    $\sigma$: a product that could serve multiple markets has high upside variance
+    (high $\sigma$), which increases the option value.
+  \item The capital efficiency of the product determines the \textbf{strike price} $K$:
+    a capital-efficient product (low cost to build and deliver) means less total
+    investment is needed, lowering $K$ and increasing the probability that the option
+    finishes in the money.
+\end{itemize}
+
+\begin{keyinsight}
+Product-market fit is not just a qualitative milestone---it is the primary determinant
+of the drift parameter in the firm's value process. Achieving PMF transforms the venture
+from a negative-drift process (burning cash faster than generating value) to a
+positive-drift process (generating value faster than consuming capital). In options
+terms, this is the transition from an out-of-the-money option that is decaying toward
+zero to an in-the-money option that is appreciating.
+\end{keyinsight}
+
+% ============================================================
+% CHAPTER 3 --- OPTIONS THEORY
+% ============================================================
+\chapter{The Venture as a Call Option}\label{ch:options}
+
+\epigraph{``The equity of a firm is a call option on the assets of the firm.''}
+{\textit{Robert C. Merton, 1974}}
+
+\section{Firm Value Dynamics}
+
+\begin{assumption}[Asset dynamics]\label{ass:gbm}
+The total asset value $V_t$ of the venture follows a geometric Brownian
+motion under the physical measure~$\Prob$:
+\begin{equation}\label{eq:gbm_ch3}
+  dV_t = \mu(a_t)\,V_t\,dt + \sigma(a_t)\,V_t\,dW_t,
+  \qquad V_0 > 0,
+\end{equation}
+where $W_t$ is a standard Wiener process, $a_t \in \mathcal{A}$ is the
+entrepreneur's action (control variable) at time~$t$, $\mu:\mathcal{A}\to\R$
+is the drift function, and $\sigma:\mathcal{A}\to\R_{>0}$ is the volatility
+function.
+\end{assumption}
+
+The key departure from standard asset pricing is that $\mu$ and $\sigma$
+are \emph{endogenous}---they depend on the entrepreneur's strategic choices
+(hiring, product design, market selection, regulatory positioning). This
+connects the options-theoretic pillar to the game-theoretic and
+information-theoretic pillars developed in later chapters.
+
+The solution to the SDE \eqref{eq:gbm_ch3} is:
+\begin{equation}\label{eq:gbm_solution}
+  V_t = V_0 \exp\!\left[\left(\mu - \frac{\sigma^2}{2}\right)t
+    + \sigma\,W_t\right],
+\end{equation}
+so that $\ln V_t \sim \mathcal{N}\!\left(\ln V_0 + (\mu - \sigma^2/2)t,\;
+\sigma^2 t\right)$. This log-normal distribution is the foundation for all
+subsequent option pricing results.
+
+\section{Equity as a European Call}
+
+Following \citet{Merton1974}, let $K$ denote the total capital committed to
+the venture (equity invested plus face value of debt). At a terminal liquidity
+event at time~$T$, the equity payoff is:
+\begin{equation}\label{eq:equity_payoff}
+  E_T = \max(V_T - K,\; 0) = (V_T - K)^+.
+\end{equation}
+
+Under Assumption~\ref{ass:gbm} with constant $\mu,\sigma$, and transitioning to the
+risk-neutral measure $\mathbb{Q}$ (where the drift becomes the risk-free rate~$r$), the
+risk-neutral valuation of equity is the Black--Scholes--Merton formula:
+\begin{equation}\label{eq:bsm}
+  E_0 = V_0\,\Phi(d_1) - K\,e^{-rT}\,\Phi(d_2),
+\end{equation}
+where
+\begin{equation}\label{eq:d1d2}
+  d_1 = \frac{\ln(V_0/K) + (r + \tfrac{1}{2}\sigma^2)T}{\sigma\sqrt{T}},
+  \qquad
+  d_2 = d_1 - \sigma\sqrt{T},
+\end{equation}
+$r$ is the risk-free rate, and $\Phi(\cdot)$ is the standard normal CDF.
+
+\begin{remark}[Interpreting the components]
+The formula \eqref{eq:bsm} has a clear interpretation: $V_0\,\Phi(d_1)$ is the
+expected value of the assets conditional on the option finishing in the money,
+weighted by the risk-neutral probability; $K\,e^{-rT}\,\Phi(d_2)$ is the present
+value of the strike, weighted by the risk-neutral probability that the option
+expires in the money (i.e., $\Phi(d_2) = \Prob^{\mathbb{Q}}(V_T > K)$).
+
+For the entrepreneur, $\Phi(d_2)$ is the probability of a successful exit (venture
+value exceeds total invested capital at the terminal date). This probability
+increases with $V_0/K$ (moneyness), $\sigma$ (volatility---more variance means more
+chance of a large upside), and $T$ (time---more runway means more time for positive
+outcomes to materialise).
+\end{remark}
+
+\section{The Entrepreneurial Greeks}
+
+We define the venture-specific option sensitivities:
+
+\begin{definition}[Entrepreneurial Greeks]\label{def:greeks}
+Let $E = E(V, K, \sigma, T, r)$ denote the equity value as given by
+\eqref{eq:bsm}. The entrepreneurial Greeks are:
+\begin{align}
+  \Delta_E &= \frac{\partial E}{\partial V} = \Phi(d_1),
+    \label{eq:delta} \\[6pt]
+  \Theta_E &= -\frac{\partial E}{\partial T}
+    = -\frac{V_0\,\sigma\,\phi(d_1)}{2\sqrt{T}}
+      - r\,K\,e^{-rT}\,\Phi(d_2),
+    \label{eq:theta} \\[6pt]
+  \mathcal{V}_E &= \frac{\partial E}{\partial \sigma}
+    = V_0\,\sqrt{T}\,\phi(d_1),
+    \label{eq:vega} \\[6pt]
+  \Gamma_E &= \frac{\partial^2 E}{\partial V^2}
+    = \frac{\phi(d_1)}{V_0\,\sigma\,\sqrt{T}},
+    \label{eq:gamma}
+\end{align}
+where $\phi(\cdot)$ is the standard normal PDF.
+\end{definition}
+
+\begin{remark}[Entrepreneurial interpretation]\quad
+\begin{itemize}[nosep]
+  \item \textbf{Delta} ($\Delta_E$): The sensitivity of equity to changes in underlying
+    business fundamentals. A delta of 0.3 means that a \$1 increase in firm value
+    translates to \$0.30 of equity value. Deep out-of-the-money ventures (pre-PMF,
+    pre-revenue) have low delta; near-the-money ventures have delta near 0.5; deep
+    in-the-money ventures (profitable, growing) have delta near~1.
+  \item \textbf{Theta} ($\Theta_E$): Theta decay maps directly to the venture's
+    \textbf{burn rate}. Each month of operation without a value milestone erodes option
+    value. The magnitude of theta depends on moneyness: at-the-money options have the
+    highest theta, meaning ventures near break-even experience the most pressure from
+    time passage.
+  \item \textbf{Vega} ($\mathcal{V}_E$): The entrepreneur's ability to increase upside
+    dispersion through pivots, new market entry, or product innovation. Vega is always
+    positive for long option positions, confirming the entrepreneurial intuition that
+    ``volatility is your friend''---as a call option holder, you benefit from variance
+    because your downside is capped (at zero, i.e., total loss of invested capital) but
+    your upside is unlimited.
+  \item \textbf{Gamma} ($\Gamma_E$): The convexity of entrepreneurial equity. High gamma
+    near the strike means that small improvements in firm value translate to
+    \emph{accelerating} increases in equity value. This is why the period around
+    product-market fit is so critical: the venture is near the strike, gamma is maximal,
+    and each incremental improvement has an outsized impact.
+\end{itemize}
+\end{remark}
+
+\section{Compound Options: The Multi-Round Structure}\label{sec:compound}
+
+Each funding round creates a \emph{compound option} in the sense of
+\citet{Geske1979}. Let $T_1 < T_2 < \cdots < T_n = T$ denote the times of
+successive funding rounds, and $K_i$ the capital committed at round~$i$.
+The equity at round~$i$ is an option on the equity at round~$i+1$:
+
+\begin{equation}\label{eq:compound}
+  E_i = e^{-r(T_{i+1}-T_i)}
+    \E^{\mathbb{Q}}\bigl[\max\bigl(E_{i+1}(V_{T_{i+1}}) - K_{i+1},\;0\bigr)
+    \;\big|\;\F_{T_i}\bigr].
+\end{equation}
+
+The total venture equity is the outermost compound option:
+\begin{equation}\label{eq:total_compound}
+  E_0 = \underbrace{C\bigl(C\bigl(\cdots C(V_T - K_n)^+
+    \cdots - K_2\bigr)^+ - K_1\bigr)^+}_{n \text{ layers}}.
+\end{equation}
+
+The entrepreneur's monthly ``roll'' is the decision at each $T_i$ to either:
+\begin{enumerate}[nosep]
+  \item \textbf{Exercise early} (sell/liquidate at current value);
+  \item \textbf{Let expire} (shut down, accept $E_i = 0$);
+  \item \textbf{Roll forward} (raise round $i+1$, paying $K_{i+1}$ to acquire
+    the next compound option).
+\end{enumerate}
+
+For a two-round compound option (seed $\to$ Series~A), the Geske formula gives:
+\begin{equation}\label{eq:geske}
+  E_0 = V_0\,\Phi_2(a_1, b_1; \rho)
+    - K_2\,e^{-rT_2}\,\Phi_2(a_2, b_2; \rho)
+    - K_1\,e^{-rT_1}\,\Phi(a_2),
+\end{equation}
+where $\Phi_2(\cdot,\cdot;\rho)$ is the bivariate normal CDF with
+correlation $\rho = \sqrt{T_1/T_2}$, and $a_1, a_2, b_1, b_2$ are defined
+analogously to $d_1, d_2$ with the respective time horizons and strikes.
+
+\section{The Entrepreneur's Stochastic Control Problem}
+
+Combining the controlled dynamics \eqref{eq:gbm_ch3} with the compound option
+structure, the entrepreneur solves a Hamilton--Jacobi--Bellman (HJB) equation.
+Let $J(V,t)$ be the value function:
+
+\begin{equation}\label{eq:hjb}
+  \sup_{a_t \in \mathcal{A}} \left\{
+    \frac{\partial J}{\partial t}
+    + \mu(a_t)\,V\,\frac{\partial J}{\partial V}
+    + \frac{1}{2}\sigma^2(a_t)\,V^2\,
+      \frac{\partial^2 J}{\partial V^2}
+    - c(a_t)
+  \right\} = r\,J,
+\end{equation}
+
+subject to the terminal condition $J(V,T) = (V - K)^+$ and the state
+constraint $V_t > 0$, where $c(a_t)$ is the flow cost of action~$a_t$
+(operational expenditure, hiring costs, etc.).
+
+The optimal policy $a^*_t$ satisfies the first-order condition:
+\begin{equation}\label{eq:hjb_foc}
+  \mu'(a^*)\,V\,\frac{\partial J}{\partial V}
+  + \sigma(a^*)\,\sigma'(a^*)\,V^2\,\frac{\partial^2 J}{\partial V^2}
+  = c'(a^*).
+\end{equation}
+
+This first-order condition says the marginal benefit of action (through drift
+improvement weighted by delta, plus volatility adjustment weighted by gamma) must
+equal the marginal cost. This is the fundamental equation of entrepreneurial
+decision-making: every action must be evaluated by its impact on the option value
+through both the drift channel (expected value improvement) and the volatility
+channel (optionality expansion or contraction).
+
+\begin{practicalimplication}
+The HJB first-order condition explains why the right action depends on where you are
+relative to the strike. When the venture is deep out-of-the-money ($V \ll K$), gamma
+is low and delta is low, so the volatility channel dominates: the entrepreneur should
+take high-variance actions (bold pivots, new markets) because only a large move can
+bring the option into the money. When the venture is near the money ($V \approx K$),
+gamma is maximal, and the entrepreneur should focus on drift improvement (incremental
+product refinement, unit economics optimisation) because each incremental improvement
+has an outsized impact through convexity.
+\end{practicalimplication}
+
+% ============================================================
+% CHAPTER 4 --- GAME THEORY
+% ============================================================
+\chapter{Game-Theoretic Foundations}\label{ch:game}
+
+\epigraph{``All of life is a game of incomplete information.''}
+{\textit{John von Neumann}}
+
+\section{Team Coordination: The Stag Hunt}
+
+The founding team faces a coordination problem with the structure of a
+\textbf{stag hunt} game \citep{Skyrms2004}. Each co-founder must choose
+between committing fully to the venture (``hunting the stag'') or
+maintaining outside options (``hunting the hare''). Full commitment by all
+parties yields the maximum payoff, but any defection collapses the
+cooperative equilibrium.
+
+\begin{definition}[Founding team coordination game]
+Consider $n$ co-founders, each choosing effort $e_i \in \{L, H\}$ (low or
+high). The payoff to player~$i$ is:
+\begin{equation}\label{eq:stag_hunt}
+  u_i(e_i, e_{-i}) =
+  \begin{cases}
+    \alpha\,\frac{s_i}{n}\,(V_H - K) & \text{if } e_j = H
+      \;\forall\, j, \\[4pt]
+    \beta\,w_0 & \text{if } e_i = L, \\[4pt]
+    \gamma\,\frac{s_i}{n}\,(V_L - K) & \text{if } e_i = H \text{ but }
+      \exists\, j \neq i: e_j = L,
+  \end{cases}
+\end{equation}
+where $s_i$ is player~$i$'s equity share, $V_H > V_L$ are the venture
+values under full and partial coordination, $w_0$ is the outside option
+(alternative employment), and $\alpha > \gamma > 0$, $\beta > 0$ are
+scaling parameters.
+\end{definition}
+
+This game has two pure-strategy Nash equilibria: the \textbf{Pareto-dominant}
+equilibrium $(H, H, \ldots, H)$ and the \textbf{risk-dominant} equilibrium
+$(L, L, \ldots, L)$. Following \citet{Skyrms2004}, equilibrium selection
+depends on the \emph{basin of attraction}: the Pareto-dominant equilibrium
+is selected if and only if:
+\begin{equation}\label{eq:basin}
+  \frac{s_i}{n}\bigl[\alpha(V_H - K) - \gamma(V_L - K)\bigr]
+  > \beta\,w_0 - \gamma\,\frac{s_i}{n}\,(V_L - K).
+\end{equation}
+
+\begin{proposition}[Equity threshold for coordination]\label{prop:equity_threshold}
+The minimum equity share $s_i^*$ required for player~$i$ to choose $H$ in
+the risk-dominant equilibrium selection is:
+\begin{equation}\label{eq:s_star}
+  s_i^* = \frac{n\,\beta\,w_0}{\alpha(V_H - K)}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Rearranging \eqref{eq:basin}, we require:
+\[
+  s_i \cdot \frac{\alpha(V_H - K) - \gamma(V_L - K) + \gamma(V_L - K)}{n}
+  > \beta\,w_0.
+\]
+Simplifying: $s_i \cdot \alpha(V_H - K) / n > \beta\,w_0$, giving the result.
+\end{proof}
+
+\begin{practicalimplication}
+This proposition has direct implications for equity allocation. If a co-founder's
+outside option $w_0$ is high (e.g., they could earn \$400K at a FAANG company), their
+minimum equity share $s_i^*$ must be correspondingly large to sustain coordination. This
+formalises the intuition that you must give sufficient equity to retain commitment,
+and provides a quantitative formula for ``sufficient.''
+\end{practicalimplication}
+
+\section{Principal--Agent Problem: Moral Hazard in Teams}
+
+Following \citet{Holmstrom1982}, consider a team of $n$ agents whose joint
+output is $Y = f(e_1, \ldots, e_n) + \varepsilon$, where $\varepsilon \sim
+\mathcal{N}(0, \sigma_\varepsilon^2)$. The principal (entrepreneur/lead
+founder) designs a compensation scheme $w_i(Y)$ to solve:
+
+\begin{equation}\label{eq:moral_hazard}
+  \max_{\{w_i(\cdot)\}} \E\left[Y - \sum_{i=1}^n w_i(Y)\right]
+\end{equation}
+subject to the incentive compatibility (IC) constraints:
+\begin{equation}\label{eq:ic}
+  e_i^* \in \argmax_{e_i} \E\bigl[w_i(Y)\bigr] - c_i(e_i)
+  \quad \forall\, i,
+\end{equation}
+and the individual rationality (IR) constraints:
+\begin{equation}\label{eq:ir}
+  \E\bigl[w_i(Y)\bigr] - c_i(e_i^*) \geq \bar{u}_i
+  \quad \forall\, i.
+\end{equation}
+
+The optimal contract under CARA utility $u(x) = -\exp(-\rho\,x)$ takes
+the linear form:
+\begin{equation}\label{eq:linear_contract}
+  w_i(Y) = \alpha_i + \beta_i\,Y,
+  \qquad
+  \beta_i^* = \frac{(\partial f/\partial e_i)^2}
+    {\sum_{j=1}^n (\partial f/\partial e_j)^2
+    + n\,\rho\,\sigma_\varepsilon^2}.
+\end{equation}
+
+In the venture context, $\beta_i$ maps to the equity vesting schedule: the slope of
+compensation with respect to output determines effort incentives. The vesting cliff
+is a discontinuous version of this linear contract that addresses the specific adverse
+selection problem of early departure.
+
+\begin{remark}[The free-rider problem]
+When team size $n$ increases, the optimal $\beta_i^*$ decreases (each agent bears less
+of the marginal product), leading to under-provision of effort. This is the classic
+$1/n$ free-rider problem. In venture teams, this manifests as the observation that
+founding teams larger than 3--4 people often struggle with coordination. The mathematical
+reason is that $\beta_i^* \to 0$ as $n \to \infty$, destroying individual incentives.
+\end{remark}
+
+\section{Investor Signalling Game}\label{sec:signalling}
+
+Each fundraising round is a signalling game in the sense of \citet{Spence1973}.
+
+\begin{definition}[Fundraising signalling game]
+The entrepreneur has private type $\theta \in \{\theta_L, \theta_H\}$
+representing firm quality, with prior $\Prob(\theta_H) = p_0$.
+The entrepreneur chooses a signal $s \in \R_+$ (valuation at which to
+raise, amount of personal capital committed, choice of lead investor).
+Investors observe~$s$ and update their belief:
+\begin{equation}\label{eq:bayes_signal}
+  \Prob(\theta_H \mid s) = \frac{p(s \mid \theta_H)\,p_0}
+    {p(s \mid \theta_H)\,p_0 + p(s \mid \theta_L)\,(1-p_0)}.
+\end{equation}
+\end{definition}
+
+A \textbf{separating equilibrium} exists when:
+\begin{align}
+  u(\theta_H, s_H^*) - c(\theta_H, s_H^*)
+  &\geq u(\theta_H, s_L^*) - c(\theta_H, s_L^*), \label{eq:separating} \\
+  u(\theta_L, s_L^*) - c(\theta_L, s_L^*)
+  &\geq u(\theta_L, s_H^*) - c(\theta_L, s_H^*). \label{eq:separating2}
+\end{align}
+
+The single-crossing condition requires $\partial^2 c / \partial \theta \partial s < 0$:
+it is relatively cheaper for high-quality entrepreneurs to send high signals.
+
+Following \citet{LelandPyle1977}, the entrepreneur's retained equity share
+$\alpha$ serves as a signal of quality:
+\begin{equation}\label{eq:leland_pyle}
+  \frac{\partial V^*}{\partial \alpha} > 0,
+\end{equation}
+where $V^*$ is the market's assessed value. Higher retention signals higher
+quality because only entrepreneurs who believe in the upside are willing to
+bear the undiversified risk of concentrated equity positions.
+
+\section{Post-Crash War of Attrition}
+
+When the entrepreneur has successfully raised capital before a market crash,
+the competitive dynamics become a \textbf{war of attrition}
+\citep{MaynardSmith1974}.
+
+\begin{definition}[War of attrition]
+Two firms $i \in \{1,2\}$ choose exit times $t_i \in [0,\infty)$.
+The payoff to firm~$i$ is:
+\begin{equation}\label{eq:war_attrition}
+  \pi_i(t_i, t_j) =
+  \begin{cases}
+    V_{\text{monopoly}} - c\,t_j & \text{if } t_i > t_j, \\
+    -c\,t_i & \text{if } t_i < t_j, \\
+    \frac{1}{2}V_{\text{monopoly}} - c\,t_i & \text{if } t_i = t_j,
+  \end{cases}
+\end{equation}
+where $c$ is the per-period cost of continuing (burn rate) and
+$V_{\text{monopoly}}$ is the prize for surviving.
+\end{definition}
+
+The unique symmetric mixed-strategy Nash equilibrium has each firm choosing
+exit time according to an exponential distribution:
+\begin{equation}\label{eq:war_equilibrium}
+  F(t) = 1 - \exp\!\left(-\frac{c}{V_{\text{monopoly}}}\,t\right).
+\end{equation}
+
+\begin{proof}
+In the symmetric equilibrium, each firm is indifferent between exiting at any
+time~$t$. The expected payoff from exiting at~$t$ must be constant:
+\[
+  \frac{d}{dt}\left[-c\,t\,(1-F(t))
+    + \int_0^t (V_{\text{monopoly}} - c\,s)\,dF(s)\right] = 0.
+\]
+Solving this differential equation with boundary condition $F(0) = 0$ yields the
+exponential distribution with rate $\lambda = c / V_{\text{monopoly}}$.
+\end{proof}
+
+The entrepreneur with more capital (lower effective~$c$ relative to runway) has a
+strategic advantage: their hazard rate of exit is lower, which forces the
+under-capitalised competitor to exit earlier in expectation. The expected survival
+time is $\E[t] = V_{\text{monopoly}} / c$, which is directly proportional to the
+runway-to-burn-rate ratio.
+
+% ============================================================
+% CHAPTER 5 --- INFORMATION THEORY
+% ============================================================
+\chapter{Information-Theoretic Foundations}\label{ch:info}
+
+\epigraph{``Information is the resolution of uncertainty.''}
+{\textit{Claude Shannon, 1948}}
+
+\section{Uncertainty and Shannon Entropy}
+
+\begin{definition}[Venture entropy]\label{def:entropy}
+Let $X$ be a discrete random variable representing the venture's outcome
+space $\{x_1, \ldots, x_m\}$ with probability mass function $p(x_i)$. The
+\textbf{Shannon entropy} is:
+\begin{equation}\label{eq:entropy}
+  H(X) = -\sum_{i=1}^m p(x_i)\,\log_2 p(x_i).
+\end{equation}
+\end{definition}
+
+At founding, entropy is near-maximal:
+$H(X) \approx \log_2 m$ (uniform prior over outcomes). The entrepreneur's
+task is to \textbf{reduce entropy} through experimentation and information
+acquisition.
+
+For continuous random variables (e.g., firm value $V_T$ at exit), we use
+\textbf{differential entropy}:
+\begin{equation}\label{eq:diff_entropy}
+  h(V_T) = -\int_0^\infty f_{V_T}(v)\,\ln f_{V_T}(v)\,dv.
+\end{equation}
+
+For the log-normal firm value process \eqref{eq:gbm_solution}:
+\begin{equation}\label{eq:lognormal_entropy}
+  h(V_T) = \frac{1}{2}\ln(2\pi e\,\sigma^2 T) + \ln V_0
+    + \left(\mu - \frac{\sigma^2}{2}\right)T.
+\end{equation}
+
+This shows that venture entropy grows linearly with time horizon~$T$ and
+quadratically with volatility~$\sigma$, quantifying the intuition that
+longer time horizons and higher uncertainty create more decision complexity.
+
+\section{Mutual Information and Information Gain}
+
+\begin{definition}[Information gain]\label{def:info_gain}
+Let $Y$ be an observable signal. The \textbf{information gain} from
+observing~$Y$ is the \textbf{mutual information}:
+\begin{equation}\label{eq:mutual_info}
+  \MI(X; Y) = H(X) - H(X \mid Y)
+  = \sum_{x,y} p(x,y)\,\log_2 \frac{p(x,y)}{p(x)\,p(y)}.
+\end{equation}
+\end{definition}
+
+The entrepreneur's \textbf{learning rate} is the rate at which mutual
+information accumulates:
+\begin{equation}\label{eq:learning_rate}
+  \Lambda(t) = \frac{d}{dt}\,\MI(X;\, Y_1, Y_2, \ldots, Y_{N(t)}),
+\end{equation}
+where $N(t)$ is the number of experiments conducted by time~$t$.
+
+Key properties of mutual information relevant to entrepreneurship:
+\begin{enumerate}[nosep]
+  \item $\MI(X; Y) \geq 0$ with equality iff $X$ and $Y$ are independent
+    (every experiment provides non-negative information);
+  \item $\MI(X; Y) = \MI(Y; X)$ (information is symmetric);
+  \item $\MI(X; Y, Z) \geq \MI(X; Y)$ (more data never hurts, in the
+    absence of processing costs);
+  \item The chain rule: $\MI(X; Y_1, \ldots, Y_n)
+    = \sum_{k=1}^n \MI(X; Y_k \mid Y_1, \ldots, Y_{k-1})$ (total
+    information decomposes into sequential contributions).
+\end{enumerate}
+
+\section{Kullback--Leibler Divergence: Belief Accuracy}
+
+\begin{definition}[Entrepreneurial belief accuracy]
+Let $\pi_E$ be the entrepreneur's posterior distribution over venture
+outcomes, and $\pi^*$ the true distribution. The \textbf{belief
+inaccuracy} is the KL divergence:
+\begin{equation}\label{eq:kl}
+  \KL(\pi^* \| \pi_E) = \sum_{x} \pi^*(x)\,
+    \log \frac{\pi^*(x)}{\pi_E(x)}.
+\end{equation}
+\end{definition}
+
+\begin{definition}[Informational alpha]\label{def:alpha}
+Let $\pi_M$ denote the market consensus distribution. The entrepreneur's
+\textbf{informational alpha} is:
+\begin{equation}\label{eq:info_alpha}
+  \alpha_I = \KL(\pi^* \| \pi_M) - \KL(\pi^* \| \pi_E).
+\end{equation}
+When $\alpha_I > 0$, the entrepreneur's beliefs are closer to reality than
+the market's, creating an exploitable information edge.
+\end{definition}
+
+\begin{remark}
+The informational alpha $\alpha_I$ is directly related to the concept of
+\emph{edge} in trading: the entrepreneur ``knows something the market doesn't.''
+The magnitude of $\alpha_I$ determines how aggressively the entrepreneur should
+invest (via the Kelly criterion), how high a valuation they should accept (or demand)
+when fundraising, and when they should exit (when $\alpha_I$ decays to zero, i.e.,
+the market has caught up to their information).
+\end{remark}
+
+\section{Kelly Criterion: Optimal Capital Deployment}
+
+\begin{proposition}[Kelly-optimal deployment]\label{prop:kelly}
+Consider a binary outcome: the venture succeeds with probability $p$
+(entrepreneur's estimate) and the payoff on success is $b : 1$. The
+Kelly-optimal fraction of capital to deploy is:
+\begin{equation}\label{eq:kelly}
+  f^* = \frac{p(b+1) - 1}{b}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The expected logarithmic growth rate is $g(f) = p\,\ln(1+bf) + (1-p)\,\ln(1-f)$.
+Setting $g'(f) = 0$:
+\[
+  \frac{pb}{1+bf^*} = \frac{1-p}{1-f^*}.
+\]
+Solving gives $f^* = (p(b+1) - 1)/b$.
+\end{proof}
+
+For venture capital deployment across multiple hypotheses, the multivariate
+Kelly criterion gives:
+\begin{equation}\label{eq:kelly_multi}
+  \mathbf{f}^* = \boldsymbol{\Sigma}^{-1}\,(\boldsymbol{\mu} - r\,\mathbf{1}),
+\end{equation}
+where $\boldsymbol{\Sigma}$ is the covariance matrix of returns across
+hypotheses and $\boldsymbol{\mu}$ is the vector of expected returns.
+
+\begin{practicalimplication}
+The Kelly criterion explains why experienced entrepreneurs deploy capital incrementally
+rather than all at once. Full Kelly betting ($f = f^*$) maximises long-run growth but
+has very high variance. Fractional Kelly ($f = \lambda f^*$ for $\lambda \in (0.25, 0.5)$)
+sacrifices some growth for dramatically lower variance of outcomes. This maps to the
+venture practice of staged funding: deploy capital in tranches, each conditional on
+evidence that the previous tranche's hypothesis was correct.
+\end{practicalimplication}
+
+\section{Explore--Exploit: The Multi-Armed Bandit}
+
+\begin{definition}[Gittins index]
+The \textbf{Gittins index} $\lambda_k$ for arm~$k$ with current belief
+state $s_k$ is:
+\begin{equation}\label{eq:gittins}
+  \lambda_k(s_k) = \sup_{\tau > 0}
+    \frac{\E\!\left[\sum_{t=0}^{\tau-1} \beta^t\,R_{k,t}
+      \;\middle|\; s_k\right]}
+    {\E\!\left[\sum_{t=0}^{\tau-1} \beta^t
+      \;\middle|\; s_k\right]},
+\end{equation}
+where $\beta \in (0,1)$ is the discount factor, $R_{k,t}$ is the reward
+from arm~$k$ at time~$t$, and $\tau$ is any stopping time.
+\end{definition}
+
+The optimal policy is to always play the arm with the highest Gittins index. In the
+entrepreneurial context, this provides a principled framework for the explore-exploit
+tradeoff: arms with high expected reward but low uncertainty should be exploited; arms
+with lower expected reward but high uncertainty may have higher Gittins indices because
+of their information value.
+
+\section{Rate--Distortion Theory: Bounded Rationality}
+
+The entrepreneur cannot process all available information. The
+\textbf{rate--distortion function} \citep{CoverThomas2006} characterises the
+minimum information rate $R$ needed to achieve a target decision quality~$D$:
+\begin{equation}\label{eq:rate_distortion}
+  R(D) = \min_{p(\hat{x}|x):\, \E[d(x,\hat{x})] \leq D}
+    \MI(X; \hat{X}),
+\end{equation}
+where $d(x, \hat{x})$ is a distortion measure between the true state~$x$
+and the entrepreneur's decision~$\hat{x}$.
+
+This formalises the idea that the entrepreneur must construct a
+\textbf{sufficient statistic}---a compressed representation that preserves
+decision-relevant information while discarding noise. The practical implication
+is that the entrepreneur should focus on a small number of key metrics (the
+sufficient statistic) rather than trying to monitor everything.
+
+% ============================================================
+% CHAPTER 6 --- FUNDRAISING
+% ============================================================
+\chapter{Fundraising Timing and Instrument Selection}\label{ch:fundraising}
+
+\epigraph{``Raise when you can, not when you need to.''}
+{\textit{Venture capital proverb}}
+
+\section{The Signal Extraction Problem}
+
+The entrepreneur must forecast market conditions at a horizon $h = 6$ months. Let
+$S_t$ denote the capital market state, taking values in
+$\mathcal{S} = \{\textsc{Expansion}, \textsc{Late-Cycle}, \textsc{Contraction},
+\textsc{Recovery}\}$.
+
+\begin{assumption}[Regime-switching dynamics]\label{ass:regime}
+The market state follows a continuous-time Markov chain with generator matrix
+$\mathbf{Q} = [q_{ij}]$. The transition probability over horizon $h$ is:
+\begin{equation}\label{eq:transition}
+  \mathbf{P}(h) = \exp(\mathbf{Q}\,h).
+\end{equation}
+\end{assumption}
+
+The entrepreneur observes macro indicators $\mathbf{z}_t = (z_t^1, \ldots, z_t^d)$ and
+constructs a posterior:
+\begin{equation}\label{eq:filter}
+  \pi_t(s) = \Prob(S_t = s \mid \mathbf{z}_0, \ldots, \mathbf{z}_t)
+  \propto p(\mathbf{z}_t \mid S_t = s)\,
+    \sum_{s'} P_{s's}(\Delta t)\,\pi_{t-\Delta t}(s').
+\end{equation}
+
+The $h$-step-ahead crash probability is:
+\begin{equation}\label{eq:crash_prob}
+  p_{\text{crash}}(t, h) = \sum_{s'} P_{s',\text{Contraction}}(h)\,\pi_t(s').
+\end{equation}
+
+\subsection{Observable Macro Indicators}
+
+The entrepreneur's signal vector $\mathbf{z}_t$ should include the
+highest-information signals. Empirically, the most informative indicators for
+regime prediction are:
+
+\begin{enumerate}[nosep]
+  \item \textbf{Yield curve slope}: The spread between 10-year and 2-year Treasury
+    yields. An inverted curve ($z^1 < 0$) has preceded every US recession since the
+    1960s \citep{EstrellaMishkin1998}, with a lead time of 6--18 months.
+  \item \textbf{Credit spreads}: The BofA High Yield Option-Adjusted Spread (OAS).
+    Widening spreads signal increasing risk aversion and tightening financial conditions.
+  \item \textbf{VIX term structure}: The difference between VIX futures at different
+    maturities. Backwardation (near-term VIX > far-term VIX) signals acute near-term
+    stress.
+  \item \textbf{Equity market breadth}: The percentage of stocks above their 200-day
+    moving average. Narrowing breadth (fewer stocks participating in the rally) signals
+    fragility.
+  \item \textbf{ISM Manufacturing PMI}: A leading indicator of economic activity.
+    Readings below 50 indicate contraction.
+\end{enumerate}
+
+\section{Optimal Fundraising Timing}
+
+\begin{proposition}[Fundraising trigger]\label{prop:fundraise}
+The entrepreneur should initiate fundraising if:
+\begin{equation}\label{eq:fundraise_trigger}
+  p_{\text{crash}} \cdot \bigl[L_{\text{crash}} + \delta\,(V_{\text{pre}} -
+    V_{\text{post}})\bigr]
+  > (1-p_{\text{crash}}) \cdot C_{\text{dilution}}(t),
+\end{equation}
+where $L_{\text{crash}}$ is the expected loss from inability to raise during a crash,
+$\delta$ is the discount factor, $V_{\text{pre}}, V_{\text{post}}$ are pre- and
+post-crash valuations, and $C_{\text{dilution}}(t)$ is the cost of raising now.
+\end{proposition}
+
+The critical crash probability threshold is:
+\begin{equation}\label{eq:p_star}
+  p^* = \frac{C_{\text{dilution}}(t)}
+    {C_{\text{dilution}}(t) + L_{\text{crash}}
+    + \delta(V_{\text{pre}} - V_{\text{post}})}.
+\end{equation}
+
+\begin{remark}[Runway dependence]
+When runway $R < 9$ months, $L_{\text{crash}}$ dominates (inability to raise is
+existential), so $p^*$ is very low. When $R > 18$ months, $p^*$ is higher.
+\end{remark}
+
+\section{The Fundraising Information Game}
+
+The interaction between entrepreneur and investor beliefs creates a strategic game.
+Let $p$ be the entrepreneur's crash belief and $q$ the investor's.
+
+\begin{definition}[Fundraising belief game]
+The payoff matrix for the entrepreneur is:
+\begin{equation}\label{eq:fundraise_game}
+  \Pi_E =
+  \begin{pmatrix}
+    & q_L & q_H \\
+    p_L & V_{\text{fair}} & V_{\text{fair}} - \text{Ratchet} \\
+    p_H & V_{\text{high}} - \text{Dilution} & V_{\text{low}} - \text{LP}
+  \end{pmatrix}
+\end{equation}
+\end{definition}
+
+The maximum information advantage is in the $(p_H, q_L)$ cell: the entrepreneur
+raises at high valuations before the market reprices. The information-theoretic value is:
+\begin{equation}\label{eq:info_value_cell}
+  \Delta V_{\text{info}} = V_{\text{high}} - V_{\text{low}} + \text{LP} - \text{Dilution}.
+\end{equation}
+
+\section{Debt vs.\ Equity: The Option-Theoretic Decision}
+
+\begin{theorem}[Optimal instrument selection]\label{thm:instrument}
+Define the entrepreneur's \textbf{confidence ratio}
+$\kappa = \E_E[V_T] / V_{\text{market}}$.
+\begin{enumerate}[nosep]
+  \item If $\kappa > 1$ (entrepreneur believes firm is undervalued):
+    \textbf{debt is optimal}. The entrepreneur avoids selling cheap calls
+    (equity at depressed valuations). This is the pecking order of
+    \citet{MyersMajluf1984}.
+  \item If $\kappa \leq 1$ and $\sigma$ is high:
+    \textbf{equity is optimal}. The call being sold is expensive (high vega).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The value of equity sold to investors is:
+\begin{equation}\label{eq:call_value}
+  C_{\text{equity}} = d \cdot \bigl[V_0\,\Phi(d_1) - K\,e^{-rT}\Phi(d_2)\bigr],
+\end{equation}
+which is increasing in $\sigma$ (positive vega). When $\kappa > 1$, the entrepreneur
+knows $V_0$ is higher than the market believes, so $C_{\text{equity}}$ is underpriced
+from the entrepreneur's perspective. Debt avoids this mispricing.
+
+The value of the put written to creditors is:
+\begin{equation}\label{eq:put_value}
+  P_{\text{debt}} = D\,e^{-rT}\Phi(-d_2') - V_0\,\Phi(-d_1'),
+\end{equation}
+which is overpriced when the market overestimates default probability (underestimates
+$V_0$). The entrepreneur benefits as the put writer.
+
+When $\kappa \leq 1$ and $\sigma$ is high, the call premium $C_{\text{equity}}$ is large
+due to vega, and the entrepreneur captures fair value for the uncertainty while sharing
+the downside. \qed
+\end{proof}
+
+\section{Crash-Conditional Instrument Selection}
+
+\begin{corollary}[Crash-type-dependent choice]\label{cor:crash_type}
+Conditional on the entrepreneur's crash forecast:
+\begin{enumerate}[nosep]
+  \item \textbf{Liquidity crisis predicted} (credit markets seize): raise equity now.
+  \item \textbf{Valuation correction $> 30\%$ predicted}: raise equity at current multiples.
+  \item \textbf{Valuation correction $10$--$30\%$ predicted}: raise debt to preserve equity.
+\end{enumerate}
+\end{corollary}
+
+\section{Post-Crash Capital Deployment}
+
+If the entrepreneur successfully raises before the crash, they are positioned to play
+the war of attrition (Section~\ref{sec:signalling} of Chapter~\ref{ch:game}). The
+\textbf{post-crash deployment strategy} follows from the Kelly criterion applied to
+distressed-asset acquisition:
+
+\begin{equation}\label{eq:post_crash_kelly}
+  f^*_{\text{acquisition}} = \frac{p_{\text{recovery}}(b_{\text{distressed}} + 1) - 1}
+    {b_{\text{distressed}}},
+\end{equation}
+where $p_{\text{recovery}}$ is the estimated probability that the acquired asset
+recovers to pre-crash value and $b_{\text{distressed}}$ is the return multiple at
+recovery. Post-crash, $b_{\text{distressed}}$ is typically 3--10\texttimes{} (assets
+are deeply discounted), making the Kelly-optimal deployment fraction large.
+
+% ============================================================
+% CHAPTER 7 --- REGULATION
+% ============================================================
+\chapter{Regulatory Barriers and Information Asymmetry}\label{ch:regulation}
+
+\epigraph{``Regulation is the art of incomplete information.''}
+{\textit{George Stigler, paraphrased}}
+
+\section{The Entropy Tax of Regulation}
+
+\begin{definition}[Regulatory entropy decomposition]
+The entrepreneur's total decision entropy decomposes as:
+\begin{equation}\label{eq:entropy_decomp}
+  H_{\text{total}} = H_{\text{market}} + H_{\text{product}}
+    + H_{\text{reg}} - \MI_{\text{overlaps}},
+\end{equation}
+where the mutual information overlaps capture the dependencies between channels (e.g.,
+regulatory shocks cause market reactions, market crashes trigger regulatory responses).
+\end{definition}
+
+In unregulated markets, $H_{\text{reg}} \approx 0$. In heavily regulated markets
+(banking, healthcare, post-2022 crypto), $H_{\text{reg}}$ can dominate the total
+entropy budget and become the primary obstacle to effective decision-making.
+
+\section{Regulatory Information Layers}
+
+\begin{definition}[Regulatory information hierarchy]
+\begin{equation}\label{eq:reg_layers}
+  \I_{\text{reg}} = \I_{\text{statute}} \cup \I_{\text{interpret}}
+    \cup \I_{\text{intent}} \cup \I_{\text{jurisd}},
+\end{equation}
+with associated entropy ordering:
+\begin{equation}\label{eq:entropy_ordering}
+  H(\I_{\text{statute}}) < H(\I_{\text{interpret}})
+  < H(\I_{\text{jurisd}}) < H(\I_{\text{intent}}).
+\end{equation}
+\end{definition}
+
+Each layer has a different information accessibility profile:
+\begin{itemize}[nosep]
+  \item $\I_{\text{statute}}$: Statutory text. Public, but voluminous and written in
+    domain-specific legal language. Low entropy for those who can parse it.
+  \item $\I_{\text{interpret}}$: Enforcement interpretation. Semi-public through
+    enforcement actions, no-action letters, and guidance documents. Medium entropy.
+  \item $\I_{\text{jurisd}}$: Jurisdictional arbitrage map. Which jurisdictions have
+    favourable regimes, how they interact, how mobile the business can be. High entropy.
+  \item $\I_{\text{intent}}$: Regulator's future plans. Private information held by the
+    regulator and a small circle of advisors. Very high entropy for outsiders.
+\end{itemize}
+
+\section{Channel Capacity for Regulatory Information}
+
+\begin{definition}[Regulatory channel capacity]
+\begin{equation}\label{eq:channel_capacity}
+  C_{\text{reg}} = \max_{p(x)} \MI(X; Y),
+\end{equation}
+where $X$ is the regulator's true state and $Y$ is the entrepreneur's observation.
+\end{definition}
+
+For an unconnected entrepreneur:
+\begin{equation}\label{eq:low_capacity}
+  C_{\text{reg}}^{\text{unconnected}} = \log_2(1 + \text{SNR}_{\text{public}}).
+\end{equation}
+
+For a well-connected entrepreneur:
+\begin{equation}\label{eq:high_capacity}
+  C_{\text{reg}}^{\text{connected}} = \log_2(1 + \text{SNR}_{\text{private}})
+  \gg C_{\text{reg}}^{\text{unconnected}}.
+\end{equation}
+
+\begin{definition}[Regulatory information alpha]
+\begin{equation}\label{eq:reg_alpha}
+  \alpha_{\text{reg}} = \MI(X; Y \mid \text{connected})
+  - \MI(X; Y \mid \text{unconnected}).
+\end{equation}
+\end{definition}
+
+\section{Expected Value of Regulatory Intelligence}
+
+\begin{proposition}[Value of regulatory channel capacity]\label{prop:reg_value}
+Let $p_e$ be the probability of enforcement action and $L_e$ the expected loss. The
+expected value of regulatory intelligence investment $C_a$ per year is:
+\begin{equation}\label{eq:reg_ev}
+  \E[\text{Value}] = \Delta p_e \cdot L_e - C_a,
+\end{equation}
+where $\Delta p_e = p_e^{\text{unconnected}} - p_e^{\text{connected}}$.
+\end{proposition}
+
+For crypto ventures, typical parameterisation gives $\Delta p_e \approx 0.3$--$0.6$,
+$L_e \approx \$5$--$50$M, and $C_a \approx \$200$K--$500$K, yielding a 10--100\texttimes{}
+return on regulatory intelligence investment.
+
+\section{Regulatory Arbitrage as Mechanism Design}
+
+\begin{definition}[Multi-principal regulatory game]
+Let $J = \{1, \ldots, m\}$ be jurisdictions, each offering contract
+$\mathcal{R}_j = (\tau_j, \rho_j, \phi_j)$ (tax rate, restrictiveness, enforcement
+probability). The entrepreneur chooses:
+\begin{equation}\label{eq:jurisd_opt}
+  j^* = \argmax_{j \in J} \bigl\{
+    (1 - \tau_j)\,V_j - C(\rho_j) - \phi_j \cdot L_j
+  \bigr\}.
+\end{equation}
+\end{definition}
+
+The inter-jurisdictional competition between regulators is itself a game. Each
+jurisdiction sets $\mathcal{R}_j$ to maximise its objective, and the entrepreneur
+exploits the resulting Nash equilibrium. This is the formal structure behind the
+observation that crypto companies migrated from the US to Dubai, Singapore, and
+the EU in 2022--2024 in response to SEC enforcement actions.
+
+\section{Regulatory Signalling}
+
+\begin{definition}[Entrepreneur--regulator signalling game]
+The entrepreneur sends costly signal $s$ to the regulator. The regulator updates:
+\begin{equation}\label{eq:reg_signal}
+  \Prob(\theta_H \mid s) = \frac{\ell(s \mid \theta_H)\,\pi_0}
+    {\ell(s \mid \theta_H)\,\pi_0
+    + \ell(s \mid \theta_L)\,(1 - \pi_0)}.
+\end{equation}
+\end{definition}
+
+The single-crossing condition holds if compliance signalling is cheaper for
+high-quality operators:
+\begin{equation}\label{eq:single_crossing_reg}
+  \frac{\partial c(s, \theta_H)}{\partial s}
+  < \frac{\partial c(s, \theta_L)}{\partial s}.
+\end{equation}
+
+\section{Regulation as Barrier to Entry}
+
+\begin{definition}[Regulatory information barrier]
+The minimum mutual information for legal operation is:
+\begin{equation}\label{eq:i_min}
+  I_{\min} = \min\bigl\{\MI(X; Y) :
+    \Prob(\text{compliance} \mid Y) \geq 1 - \varepsilon\bigr\}.
+\end{equation}
+\end{definition}
+
+\begin{proposition}[First-mover regulatory moat]\label{prop:moat}
+The first firm to acquire $I_{\min}$ obtains a competitive advantage:
+\begin{equation}\label{eq:moat_value}
+  \text{Moat} = \sum_{k=2}^{N}
+    \bigl[C_k(I_{\min}) - C_1(I_{\min})\bigr]
+    \cdot \Prob(\text{entry}_k),
+\end{equation}
+where $C_1 < C_k$ due to learning-by-doing and established regulatory relationships.
+\end{proposition}
+
+\section{The Regulatory Greeks}\label{sec:reg_greeks}
+
+\begin{definition}[Regulatory Greeks]\label{def:reg_greeks}
+\begin{align}
+  \Delta_{\text{reg}} &= \frac{\partial J}{\partial \rho}
+    \quad \text{(sensitivity to regulatory clarity)}, \\[6pt]
+  \Gamma_{\text{reg}} &= \frac{\partial^2 J}{\partial \rho^2}
+    \quad \text{(convexity w.r.t.\ regulatory changes)}, \\[6pt]
+  \mathcal{V}_{\text{reg}} &= \frac{\partial J}{\partial H_{\text{reg}}}
+    \quad \text{(sensitivity to regulatory uncertainty)}.
+\end{align}
+\end{definition}
+
+\begin{remark}[Interpretation]
+$\Delta_{\text{reg}} > 0$: venture benefits from clarity (compliance infrastructure
+built). $\Delta_{\text{reg}} < 0$: venture benefits from ambiguity.
+$\mathcal{V}_{\text{reg}} > 0$: venture benefits from uncertainty itself (compliance
+technology, legal advisory). $\mathcal{V}_{\text{reg}} < 0$: venture suffers from
+uncertainty (operating businesses).
+\end{remark}
+
+\begin{corollary}[Regulatory vega and capital structure]
+High $|\mathcal{V}_{\text{reg}}|$ with $\mathcal{V}_{\text{reg}} < 0$ favours equity
+financing (need downside absorption). Low $|\mathcal{V}_{\text{reg}}|$ favours debt
+(regulatory floor is well-defined).
+\end{corollary}
+
+% ============================================================
+% CHAPTER 8 --- SYNTHESIS
+% ============================================================
+\chapter{The Unified Optimisation Problem}\label{ch:synthesis}
+
+\epigraph{``Everything should be made as simple as possible, but not simpler.''}
+{\textit{Attributed to Albert Einstein}}
+
+\section{State Space and Controls}
+
+The entrepreneur's state is the tuple:
+\begin{equation}\label{eq:state}
+  \mathbf{x}_t = \bigl(V_t,\; S_t,\; R_t,\;
+    \pi_t^{\text{market}},\; \pi_t^{\text{reg}},\;
+    H_t^{\text{total}},\; \MI_t^{\text{PMF}}\bigr),
+\end{equation}
+where the additional state variable $\MI_t^{\text{PMF}} = \MI(P; N)$ at time~$t$
+captures the degree of product-market fit.
+
+The control vector is:
+\begin{equation}\label{eq:controls}
+  \mathbf{u}_t = \bigl(a_t,\; \delta_t^{\text{raise}},\;
+    \iota_t,\; j_t,\; \mathbf{f}_t,\; \mathbf{p}_t\bigr),
+\end{equation}
+where $\mathbf{p}_t$ is the product design choice (from Chapter~\ref{ch:product}).
+
+\section{The Master Optimisation}
+
+\begin{theorem}[Entrepreneur's master problem]\label{thm:master}
+The entrepreneur solves:
+\begin{equation}\label{eq:master}
+  \sup_{\{\mathbf{u}_t\}_{t \geq 0}} \E\left[
+    e^{-\rho T}\,(V_T - K_T)^+
+    - \int_0^T e^{-\rho t}\,c(\mathbf{u}_t)\,dt
+  \right]
+\end{equation}
+subject to:
+\begin{align}
+  dV_t &= \mu(a_t, S_t, \MI_t^{\text{PMF}})\,V_t\,dt
+    + \sigma(a_t, S_t)\,V_t\,dW_t^V,
+    \label{eq:master_V} \\
+  dR_t &= -B_t\,dt + \delta_t^{\text{raise}}\,F_t(\iota_t)\,dt,
+    \label{eq:master_R} \\
+  d\pi_t &= \Lambda(\mathbf{z}_t, \pi_t)\,dt,
+    \label{eq:master_pi} \\
+  d\MI_t^{\text{PMF}} &= \lambda(\mathbf{p}_t, Y_t)\,dt,
+    \label{eq:master_pmf} \\
+  R_t &> 0 \quad \forall\, t \in [0,T],
+    \label{eq:master_runway} \\
+  \Prob(\text{compliance in } j_t) &\geq 1 - \varepsilon.
+    \label{eq:master_compliance}
+\end{align}
+\end{theorem}
+
+Note that the drift $\mu$ now depends on product-market fit $\MI_t^{\text{PMF}}$,
+formalising the insight from Chapter~\ref{ch:product} that PMF is the primary
+determinant of the venture's growth trajectory.
+
+The associated HJB equation in the unified state space is:
+\begin{equation}\label{eq:master_hjb}
+\boxed{
+\begin{aligned}
+  \rho\,J &= \sup_{\mathbf{u}} \biggl\{
+    \frac{\partial J}{\partial t}
+    + \mu(a, S, \MI^{\text{PMF}})\,V\,\frac{\partial J}{\partial V}
+    + \frac{1}{2}\sigma^2(a,S)\,V^2\,\frac{\partial^2 J}{\partial V^2} \\
+  &\quad + (-B + \delta^{\text{raise}} F(\iota))\,
+    \frac{\partial J}{\partial R}
+    + \Lambda(\mathbf{z},\pi) \cdot \nabla_\pi J
+    + \lambda(\mathbf{p}, Y)\,\frac{\partial J}{\partial \MI^{\text{PMF}}}
+    - c(\mathbf{u}) \biggr\}.
+\end{aligned}
+}
+\end{equation}
+
+\section{Information Acquisition as Investment}
+
+The entrepreneur allocates a budget $I_{\text{budget}}$ across four
+information channels:
+\begin{equation}\label{eq:info_budget}
+  I_{\text{budget}} = I_{\text{market}} + I_{\text{product}}
+    + I_{\text{reg}} + I_{\text{game}},
+\end{equation}
+where $I_{\text{game}}$ captures investment in understanding competitive dynamics
+and investor behaviour. The optimal allocation satisfies:
+\begin{equation}\label{eq:info_foc}
+  \frac{\partial H_k}{\partial I_k} \cdot \frac{\partial J}{\partial H_k}
+  = \text{constant} \quad \forall\, k \in \{\text{market, product, reg, game}\},
+\end{equation}
+i.e., the marginal value of entropy reduction per dollar is equalised across channels.
+
+\section{The Four-Quadrant Decision Matrix}
+
+\begin{table}[H]
+\centering
+\caption{Optimal strategy by market--regulation quadrant}
+\label{tab:quadrant}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+& Loose regulation ($\hat{R} = +$) & Tight regulation ($\hat{R} = -$) \\
+\midrule
+Bull market ($\hat{S} = +$) &
+  Raise equity aggressively &
+  Raise equity with reg provisions \\
+Bear market ($\hat{S} = -$) &
+  Raise debt, build fast &
+  Preserve capital, invest in $I_{\text{reg}}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Competitive Advantage Decomposition}
+
+The entrepreneur's total alpha decomposes as:
+\begin{equation}\label{eq:total_alpha}
+  \alpha_{\text{total}} = \alpha_{\text{market}}
+    + \alpha_{\text{product}}
+    + \alpha_{\text{reg}}
+    + \alpha_{\text{game}},
+\end{equation}
+where each component is measured as a KL divergence advantage:
+\begin{equation}\label{eq:alpha_components}
+  \alpha_k = \KL(\pi^*_k \| \pi^M_k) - \KL(\pi^*_k \| \pi^E_k),
+  \quad k \in \{\text{market, product, reg, game}\}.
+\end{equation}
+
+The Kelly-optimal investment across alpha sources:
+\begin{equation}\label{eq:kelly_portfolio}
+  \mathbf{f}^*_{\text{total}} = \boldsymbol{\Sigma}_\alpha^{-1}\,
+    \boldsymbol{\alpha}.
+\end{equation}
+
+\section{Numerical Considerations}
+
+The master HJB equation \eqref{eq:master_hjb} is a high-dimensional PDE that
+cannot generally be solved in closed form. Practical solution methods include:
+
+\begin{enumerate}[nosep]
+  \item \textbf{Dynamic programming with discretisation}: Discretise the state
+    space and solve backward recursively. Feasible for low-dimensional problems
+    (2--3 state variables) but suffers from the curse of dimensionality.
+  \item \textbf{Monte Carlo simulation}: Forward-simulate paths under candidate
+    policies, estimate the value function, and iterate. This is the Longstaff--Schwartz
+    approach adapted to control problems.
+  \item \textbf{Reinforcement learning}: Use deep RL (e.g., PPO, SAC) to
+    approximate the optimal policy directly. This is the most scalable approach
+    for the full-dimensional problem and connects to the DeepGLFT methodology.
+  \item \textbf{Approximate analytical solutions}: Linearise around a reference
+    trajectory and solve the resulting linear-quadratic problem. This gives
+    closed-form approximations near the reference path.
+\end{enumerate}
+
+% ============================================================
+% CHAPTER 9 --- CONCLUSION
+% ============================================================
+\chapter{Conclusion and Future Directions}\label{ch:conclusion}
+
+\section{Summary of Contributions}
+
+This book has developed a unified mathematical framework for entrepreneurial
+decision-making that connects five fundamental theoretical pillars:
+
+\begin{enumerate}
+  \item \textbf{Product development} (Chapter~\ref{ch:product}): Product creation as
+    structured entropy reduction, with product-market fit formalised as a mutual
+    information threshold. The framework accommodates both systematic market research
+    and the creative vision required for latent demand products.
+  \item \textbf{Options theory} (Chapter~\ref{ch:options}): The venture as a
+    controlled compound call option, with the entrepreneurial Greeks providing
+    sensitivity analysis and the HJB equation characterising optimal action.
+  \item \textbf{Game theory} (Chapter~\ref{ch:game}): Team coordination as a stag
+    hunt, compensation design as mechanism design under moral hazard, fundraising as
+    a signalling game, and post-crash competition as a war of attrition.
+  \item \textbf{Information theory} (Chapter~\ref{ch:info}): Entropy reduction as the
+    core entrepreneurial activity, the Kelly criterion for capital deployment, and
+    the Gittins index for explore-exploit allocation.
+  \item \textbf{Regulatory theory} (Chapter~\ref{ch:regulation}): Regulatory
+    uncertainty as an entropy tax, channel capacity as a measure of regulatory
+    intelligence, jurisdictional competition as multi-principal mechanism design,
+    and the regulatory Greeks as venture sensitivity measures.
+\end{enumerate}
+
+The central insight is that the entrepreneur's competitive advantage reduces to a
+single measurable quantity: \textbf{the rate at which they reduce total entropy across
+market, product, regulatory, and strategic information channels relative to
+competitors}. This rate determines the drift and volatility of the firm value process,
+the value of the compound call option that constitutes equity, the timing and instrument
+selection for fundraising, and the strategic positioning in competitive and regulatory
+games.
+
+\section{Implications for Practice}
+
+The framework yields several concrete, actionable prescriptions:
+
+\begin{enumerate}
+  \item \textbf{Product development}: Treat every experiment as an information purchase.
+    Prioritise experiments by their information-to-cost ratio. Pivot when the Bayes
+    factor exceeds a threshold. Recognise that for truly novel products, traditional
+    market research has near-zero channel capacity.
+  \item \textbf{Fundraising timing}: Maintain a macro dashboard of 4--5 indicators.
+    When crash probability exceeds $p^*$, raise immediately regardless of current
+    conditions. Adjust $p^*$ based on runway.
+  \item \textbf{Instrument selection}: Raise debt when confident in the business
+    ($\kappa > 1$) and the regulatory floor is well-defined. Raise equity when
+    uncertainty is high or when selling at peak valuations before a predicted correction.
+  \item \textbf{Team design}: Allocate equity above the coordination threshold $s_i^*$
+    for each team member. Design compensation with sufficient $\beta_i$ to sustain
+    effort incentives.
+  \item \textbf{Regulatory strategy}: Invest in regulatory channel capacity (counsel,
+    advisors, jurisdictional presence) as the highest-ROI information acquisition.
+    Choose jurisdiction by optimising the multi-principal mechanism design problem.
+  \item \textbf{Capital allocation}: Use fractional Kelly (25--50\% of full Kelly)
+    for staged capital deployment across hypotheses.
+\end{enumerate}
+
+\section{Directions for Future Research}
+
+Several extensions of the framework merit further development:
+
+\begin{enumerate}
+  \item \textbf{Empirical calibration}: The regime-switching model, the compound option
+    structure, and the information acquisition rates should be calibrated to historical
+    venture data (fundraising outcomes, failure rates, exit multiples).
+  \item \textbf{Multi-entrepreneur dynamics}: The current framework treats the
+    entrepreneur as a single agent. Extension to multiple entrepreneurs simultaneously
+    solving interacting optimisation problems would capture competitive dynamics more
+    fully.
+  \item \textbf{Network effects and platform dynamics}: Many modern ventures exhibit
+    network effects that create non-linear dynamics not captured by geometric Brownian
+    motion. Jump-diffusion or regime-dependent volatility models may be more appropriate.
+  \item \textbf{Behavioural departures}: The framework assumes Bayesian rationality.
+    Incorporating known behavioural biases (overconfidence, loss aversion, status quo
+    bias) would increase realism.
+  \item \textbf{Deep reinforcement learning solutions}: Applying modern deep RL
+    algorithms (PPO, SAC) to numerically solve the master HJB equation under realistic
+    parameterisations.
+\end{enumerate}
+
+% ============================================================
+% BIBLIOGRAPHY
+% ============================================================
+\newpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+
+\begin{thebibliography}{99}
+
+\bibitem[Aghion and Tirole(1997)]{AghionTirole1997}
+Aghion, P. and Tirole, J. (1997).
+\newblock Formal and real authority in organizations.
+\newblock \textit{Journal of Political Economy}, 105(1):1--29.
+
+\bibitem[Akerlof(1970)]{Akerlof1970}
+Akerlof, G.~A. (1970).
+\newblock The market for ``lemons'': Quality uncertainty and the market mechanism.
+\newblock \textit{Quarterly Journal of Economics}, 84(3):488--500.
+
+\bibitem[Baker et~al.(2016)]{BakerBloomDavis2016}
+Baker, S.~R., Bloom, N., and Davis, S.~J. (2016).
+\newblock Measuring economic policy uncertainty.
+\newblock \textit{Quarterly Journal of Economics}, 131(4):1593--1636.
+
+\bibitem[Bernheim and Whinston(1986)]{BernheimWhinston1986}
+Bernheim, B.~D. and Whinston, M.~D. (1986).
+\newblock Common agency.
+\newblock \textit{Econometrica}, 54(4):923--942.
+
+\bibitem[Black and Cox(1976)]{BlackCox1976}
+Black, F. and Cox, J.~C. (1976).
+\newblock Valuing corporate securities: Some effects of bond indenture provisions.
+\newblock \textit{Journal of Finance}, 31(2):351--367.
+
+\bibitem[Blank(2013)]{Blank2013}
+Blank, S. (2013).
+\newblock Why the lean start-up changes everything.
+\newblock \textit{Harvard Business Review}, 91(5):63--72.
+
+\bibitem[Bloom(2009)]{Bloom2009}
+Bloom, N. (2009).
+\newblock The impact of uncertainty shocks.
+\newblock \textit{Econometrica}, 77(3):623--685.
+
+\bibitem[Christensen(1997)]{Christensen1997}
+Christensen, C.~M. (1997).
+\newblock \textit{The Innovator's Dilemma}.
+\newblock Harvard Business School Press.
+
+\bibitem[Cover and Thomas(2006)]{CoverThomas2006}
+Cover, T.~M. and Thomas, J.~A. (2006).
+\newblock \textit{Elements of Information Theory}.
+\newblock Wiley-Interscience, 2nd edition.
+
+\bibitem[Dixit and Pindyck(1994)]{DixitPindyck1994}
+Dixit, A.~K. and Pindyck, R.~S. (1994).
+\newblock \textit{Investment Under Uncertainty}.
+\newblock Princeton University Press.
+
+\bibitem[Estrella and Mishkin(1998)]{EstrellaMishkin1998}
+Estrella, A. and Mishkin, F.~S. (1998).
+\newblock Predicting {U.S.} recessions: Financial variables as leading indicators.
+\newblock \textit{Review of Economics and Statistics}, 80(1):45--61.
+
+\bibitem[Geske(1979)]{Geske1979}
+Geske, R. (1979).
+\newblock The valuation of compound options.
+\newblock \textit{Journal of Financial Economics}, 7(1):63--81.
+
+\bibitem[Gittins(1979)]{Gittins1979}
+Gittins, J.~C. (1979).
+\newblock Bandit processes and dynamic allocation indices.
+\newblock \textit{Journal of the Royal Statistical Society: Series B}, 41(2):148--177.
+
+\bibitem[Green and Srinivasan(1990)]{GreenSrinivasan1990}
+Green, P.~E. and Srinivasan, V. (1990).
+\newblock Conjoint analysis in marketing: New developments with implications for
+  research and practice.
+\newblock \textit{Journal of Marketing}, 54(4):3--19.
+
+\bibitem[Hamilton(1989)]{Hamilton1989}
+Hamilton, J.~D. (1989).
+\newblock A new approach to the economic analysis of nonstationary time series
+  and the business cycle.
+\newblock \textit{Econometrica}, 57(2):357--384.
+
+\bibitem[Hart and Moore(1990)]{HartMoore1990}
+Hart, O. and Moore, J. (1990).
+\newblock Property rights and the nature of the firm.
+\newblock \textit{Journal of Political Economy}, 98(6):1119--1158.
+
+\bibitem[Holmstr\"{o}m(1979)]{Holmstrom1979}
+Holmstr\"{o}m, B. (1979).
+\newblock Moral hazard and observability.
+\newblock \textit{Bell Journal of Economics}, 10(1):74--91.
+
+\bibitem[Holmstr\"{o}m(1982)]{Holmstrom1982}
+Holmstr\"{o}m, B. (1982).
+\newblock Moral hazard in teams.
+\newblock \textit{Bell Journal of Economics}, 13(2):324--340.
+
+\bibitem[Howard(1966)]{Howard1966}
+Howard, R.~A. (1966).
+\newblock Information value theory.
+\newblock \textit{IEEE Transactions on Systems Science and Cybernetics}, 2(1):22--26.
+
+\bibitem[Kelly(1956)]{Kelly1956}
+Kelly, J.~L. (1956).
+\newblock A new interpretation of information rate.
+\newblock \textit{Bell System Technical Journal}, 35(4):917--926.
+
+\bibitem[Leland and Pyle(1977)]{LelandPyle1977}
+Leland, H.~E. and Pyle, D.~H. (1977).
+\newblock Informational asymmetries, financial structure, and financial intermediation.
+\newblock \textit{Journal of Finance}, 32(2):371--387.
+
+\bibitem[Martimort(1996)]{Martimort1996}
+Martimort, D. (1996).
+\newblock Exclusive dealing, common agency, and multiprincipals incentive theory.
+\newblock \textit{RAND Journal of Economics}, 27(1):1--31.
+
+\bibitem[Maynard~Smith(1974)]{MaynardSmith1974}
+Maynard~Smith, J. (1974).
+\newblock The theory of games and the evolution of animal conflicts.
+\newblock \textit{Journal of Theoretical Biology}, 47(1):209--221.
+
+\bibitem[McGrath(1999)]{McGrath1999}
+McGrath, R.~G. (1999).
+\newblock Falling forward: Real options reasoning and entrepreneurial failure.
+\newblock \textit{Academy of Management Review}, 24(1):13--30.
+
+\bibitem[Merton(1974)]{Merton1974}
+Merton, R.~C. (1974).
+\newblock On the pricing of corporate debt: The risk structure of interest rates.
+\newblock \textit{Journal of Finance}, 29(2):449--470.
+
+\bibitem[Modigliani and Miller(1958)]{ModiglianiMiller1958}
+Modigliani, F. and Miller, M.~H. (1958).
+\newblock The cost of capital, corporation finance and the theory of investment.
+\newblock \textit{American Economic Review}, 48(3):261--297.
+
+\bibitem[Myers(1977)]{Myers1977}
+Myers, S.~C. (1977).
+\newblock Determinants of corporate borrowing.
+\newblock \textit{Journal of Financial Economics}, 5(2):147--175.
+
+\bibitem[Myers and Majluf(1984)]{MyersMajluf1984}
+Myers, S.~C. and Majluf, N.~S. (1984).
+\newblock Corporate financing and investment decisions when firms have
+  information that investors do not have.
+\newblock \textit{Journal of Financial Economics}, 13(2):187--221.
+
+\bibitem[Peltzman(1976)]{Peltzman1976}
+Peltzman, S. (1976).
+\newblock Toward a more general theory of regulation.
+\newblock \textit{Journal of Law and Economics}, 19(2):211--240.
+
+\bibitem[Porter(1985)]{Porter1985}
+Porter, M.~E. (1985).
+\newblock \textit{Competitive Advantage: Creating and Sustaining Superior Performance}.
+\newblock Free Press.
+
+\bibitem[Posner(1974)]{Posner1974}
+Posner, R.~A. (1974).
+\newblock Theories of economic regulation.
+\newblock \textit{Bell Journal of Economics and Management Science}, 5(2):335--358.
+
+\bibitem[Ries(2011)]{Ries2011}
+Ries, E. (2011).
+\newblock \textit{The Lean Startup}.
+\newblock Crown Business.
+
+\bibitem[Rothschild and Stiglitz(1976)]{RothschildStiglitz1976}
+Rothschild, M. and Stiglitz, J.~E. (1976).
+\newblock Equilibrium in competitive insurance markets.
+\newblock \textit{Quarterly Journal of Economics}, 90(4):629--649.
+
+\bibitem[Salop(1979)]{Salop1979}
+Salop, S.~C. (1979).
+\newblock Strategic entry deterrence.
+\newblock \textit{American Economic Review}, 69(2):335--338.
+
+\bibitem[Shannon(1948)]{Shannon1948}
+Shannon, C.~E. (1948).
+\newblock A mathematical theory of communication.
+\newblock \textit{Bell System Technical Journal}, 27(3):379--423.
+
+\bibitem[Skyrms(2004)]{Skyrms2004}
+Skyrms, B. (2004).
+\newblock \textit{The Stag Hunt and the Evolution of Social Structure}.
+\newblock Cambridge University Press.
+
+\bibitem[Spence(1973)]{Spence1973}
+Spence, M. (1973).
+\newblock Job market signaling.
+\newblock \textit{Quarterly Journal of Economics}, 87(3):355--374.
+
+\bibitem[Stigler(1971)]{Stigler1971}
+Stigler, G.~J. (1971).
+\newblock The theory of economic regulation.
+\newblock \textit{Bell Journal of Economics and Management Science}, 2(1):3--21.
+
+\bibitem[Stiglitz(1989)]{Stiglitz1989}
+Stiglitz, J.~E. (1989).
+\newblock Markets, market failures, and development.
+\newblock \textit{American Economic Review}, 79(2):197--203.
+
+\bibitem[Thorp(2006)]{Thorp2006}
+Thorp, E.~O. (2006).
+\newblock The {K}elly criterion in blackjack, sports betting, and the stock market.
+\newblock In \textit{Handbook of Asset and Liability Management}, pp.~385--428.
+
+\bibitem[Tiebout(1956)]{Tiebout1956}
+Tiebout, C.~M. (1956).
+\newblock A pure theory of local expenditures.
+\newblock \textit{Journal of Political Economy}, 64(5):416--424.
+
+\bibitem[Tirole(1988)]{Tirole1988}
+Tirole, J. (1988).
+\newblock \textit{The Theory of Industrial Organization}.
+\newblock MIT Press.
+
+\bibitem[Trigeorgis(1996)]{Trigeorgis1996}
+Trigeorgis, L. (1996).
+\newblock \textit{Real Options: Managerial Flexibility and Strategy in Resource Allocation}.
+\newblock MIT Press.
+
+\bibitem[Vance(2015)]{Vance2015}
+Vance, A. (2015).
+\newblock \textit{Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future}.
+\newblock Ecco.
+
+\bibitem[Zetzsche et~al.(2017)]{Zetzsche2017}
+Zetzsche, D.~A., Buckley, R.~P., Arner, D.~W., and F\"{o}hr, L. (2017).
+\newblock The {ICO} gold rush: It's a scam, it's a bubble, it's a super
+  challenge for regulators.
+\newblock \textit{University of Luxembourg Law Working Paper No.~11/2017}.
+
+\end{thebibliography}
+
+\end{document}
